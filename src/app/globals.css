@@ -24,3 +24,448 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Base glitch effect */
+.glitch-enhanced {
+  position: relative;
+  animation: glitch-master 0.4s linear infinite;
+  filter: contrast(110%) saturate(120%);
+}
+
+.glitch-enhanced::before,
+.glitch-enhanced::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Primary glitch layer - magenta/pink */
+.glitch-enhanced::before {
+  color: #ff0080;
+  animation: glitch-layer-1 0.4s linear infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  filter: blur(0.5px) brightness(1.2);
+}
+
+/* Secondary glitch layer - cyan */
+.glitch-enhanced::after {
+  color: #00ff80;
+  animation: glitch-layer-2 0.4s linear infinite;
+  clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  filter: blur(0.3px) brightness(1.1);
+}
+
+/* Intensity variations */
+.glitch-intensity-1 {
+  animation-duration: 0.6s;
+}
+
+.glitch-intensity-2 {
+  animation-duration: 0.3s;
+  filter: contrast(120%) saturate(140%) hue-rotate(15deg);
+}
+
+.glitch-intensity-2::before {
+  color: #ff3399;
+  filter: blur(1px) brightness(1.4);
+}
+
+.glitch-intensity-2::after {
+  color: #33ff99;
+  filter: blur(0.8px) brightness(1.3);
+}
+
+.glitch-intensity-3 {
+  animation-duration: 0.2s;
+  filter: contrast(130%) saturate(160%) hue-rotate(30deg);
+}
+
+.glitch-intensity-3::before {
+  color: #ff0040;
+  filter: blur(1.5px) brightness(1.6);
+  clip-path: polygon(0 0, 100% 0, 100% 40%, 0 40%);
+}
+
+.glitch-intensity-3::after {
+  color: #40ff00;
+  filter: blur(1.2px) brightness(1.5);
+  clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+}
+
+/* Master animation with more complex movement */
+@keyframes glitch-master {
+  0% {
+    transform: translate(0) skew(0deg);
+  }
+  5% {
+    transform: translate(-3px, 2px) skew(-2deg);
+  }
+  10% {
+    transform: translate(2px, -3px) skew(1deg);
+  }
+  15% {
+    transform: translate(-1px, 4px) skew(-1deg);
+  }
+  20% {
+    transform: translate(4px, -2px) skew(2deg);
+  }
+  25% {
+    transform: translate(-2px, -4px) skew(-3deg);
+  }
+  30% {
+    transform: translate(3px, 3px) skew(1deg);
+  }
+  35% {
+    transform: translate(-4px, 1px) skew(-2deg);
+  }
+  40% {
+    transform: translate(2px, -1px) skew(3deg);
+  }
+  45% {
+    transform: translate(-1px, 3px) skew(-1deg);
+  }
+  50% {
+    transform: translate(1px, -4px) skew(2deg);
+  }
+  55% {
+    transform: translate(-3px, 2px) skew(-3deg);
+  }
+  60% {
+    transform: translate(4px, -1px) skew(1deg);
+  }
+  65% {
+    transform: translate(-2px, 4px) skew(-2deg);
+  }
+  70% {
+    transform: translate(3px, -3px) skew(3deg);
+  }
+  75% {
+    transform: translate(-4px, -2px) skew(-1deg);
+  }
+  80% {
+    transform: translate(2px, 3px) skew(2deg);
+  }
+  85% {
+    transform: translate(-1px, -4px) skew(-3deg);
+  }
+  90% {
+    transform: translate(3px, 1px) skew(1deg);
+  }
+  95% {
+    transform: translate(-2px, 2px) skew(-2deg);
+  }
+  100% {
+    transform: translate(0) skew(0deg);
+  }
+}
+
+/* Enhanced layer 1 animation */
+@keyframes glitch-layer-1 {
+  0% {
+    transform: translate(0) scale(1);
+    opacity: 0.8;
+  }
+  8% {
+    transform: translate(-4px, 3px) scale(1.02);
+    opacity: 0.9;
+  }
+  16% {
+    transform: translate(3px, -4px) scale(0.98);
+    opacity: 0.7;
+  }
+  24% {
+    transform: translate(-2px, 5px) scale(1.01);
+    opacity: 0.85;
+  }
+  32% {
+    transform: translate(5px, -3px) scale(0.99);
+    opacity: 0.75;
+  }
+  40% {
+    transform: translate(-3px, -5px) scale(1.03);
+    opacity: 0.9;
+  }
+  48% {
+    transform: translate(4px, 4px) scale(0.97);
+    opacity: 0.8;
+  }
+  56% {
+    transform: translate(-5px, 2px) scale(1.02);
+    opacity: 0.85;
+  }
+  64% {
+    transform: translate(2px, -2px) scale(0.98);
+    opacity: 0.7;
+  }
+  72% {
+    transform: translate(-1px, 4px) scale(1.01);
+    opacity: 0.9;
+  }
+  80% {
+    transform: translate(3px, -5px) scale(0.99);
+    opacity: 0.75;
+  }
+  88% {
+    transform: translate(-4px, 1px) scale(1.02);
+    opacity: 0.85;
+  }
+  96% {
+    transform: translate(1px, 3px) scale(0.98);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(0) scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Enhanced layer 2 animation */
+@keyframes glitch-layer-2 {
+  0% {
+    transform: translate(0) scale(1) rotate(0deg);
+    opacity: 0.7;
+  }
+  12% {
+    transform: translate(3px, -4px) scale(1.01) rotate(0.5deg);
+    opacity: 0.8;
+  }
+  24% {
+    transform: translate(-4px, 3px) scale(0.99) rotate(-0.3deg);
+    opacity: 0.6;
+  }
+  36% {
+    transform: translate(2px, 5px) scale(1.02) rotate(0.8deg);
+    opacity: 0.75;
+  }
+  48% {
+    transform: translate(-5px, -2px) scale(0.98) rotate(-0.5deg);
+    opacity: 0.65;
+  }
+  60% {
+    transform: translate(4px, -3px) scale(1.01) rotate(0.4deg);
+    opacity: 0.8;
+  }
+  72% {
+    transform: translate(-3px, 4px) scale(0.99) rotate(-0.7deg);
+    opacity: 0.7;
+  }
+  84% {
+    transform: translate(5px, 1px) scale(1.02) rotate(0.6deg);
+    opacity: 0.75;
+  }
+  96% {
+    transform: translate(-2px, -4px) scale(0.98) rotate(-0.2deg);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(0) scale(1) rotate(0deg);
+    opacity: 0.7;
+  }
+}
+
+/* Additional visual effects for extreme intensity */
+.glitch-intensity-3::before {
+  animation: glitch-layer-1 0.2s linear infinite, color-shift-1 0.8s ease-in-out infinite;
+}
+
+.glitch-intensity-3::after {
+  animation: glitch-layer-2 0.2s linear infinite, color-shift-2 1.2s ease-in-out infinite;
+}
+
+@keyframes color-shift-1 {
+  0% { color: #ff0040; }
+  25% { color: #ff4000; }
+  50% { color: #ff0080; }
+  75% { color: #8000ff; }
+  100% { color: #ff0040; }
+}
+
+@keyframes color-shift-2 {
+  0% { color: #40ff00; }
+  25% { color: #00ff40; }
+  50% { color: #0040ff; }
+  75% { color: #4000ff; }
+  100% { color: #40ff00; }
+}
+
+/* Matrix effect for header - only on hover */
+.matrix-container-header {
+  position: relative;
+  overflow: hidden;
+}
+
+.matrix-text-header {
+  position: relative;
+  z-index: 3;
+  font-family: monospace;
+  transition: all 0.3s ease;
+}
+
+/* Matrix text hover effects using glitch colors */
+.matrix-container-header:hover .matrix-text-header {
+  color: #00ff80; /* Using glitch cyan color */
+  text-shadow: 
+    0 0 5px #00ff80, 
+    0 0 10px #00ff80, 
+    0 0 15px #00ff80,
+    0 0 20px #ff0080; /* Adding glitch magenta as secondary glow */
+  filter: brightness(1.2) saturate(120%);
+}
+
+/* Matrix text pseudo-element for glitch effect on hover */
+.matrix-text-header::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: #ff0080; /* Using glitch magenta color */
+  text-shadow: 
+    0 0 3px #ff0080, 
+    0 0 8px #ff0080;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  transform: translate(-1px, -1px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.matrix-container-header:hover .matrix-text-header::before {
+  opacity: 1;
+  animation: matrix-glitch-header 2s infinite;
+}
+
+/* Matrix rain effect */
+.matrix-rain-header {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 128, 0.05) 0,
+    rgba(255, 0, 128, 0.08) 1px,
+    rgba(0, 255, 128, 0.1) 2px,
+    transparent 3px
+  );
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.matrix-container-header:hover .matrix-rain-header {
+  opacity: 1;
+  animation: matrix-rain-header 8s linear infinite;
+}
+
+/* Matrix rain animation */
+@keyframes matrix-rain-header {
+  0% {
+    transform: translateY(-100%);
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 255, 128, 0.05) 0,
+      rgba(255, 0, 128, 0.08) 1px,
+      rgba(0, 255, 128, 0.1) 2px,
+      transparent 3px
+    );
+  }
+  25% {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 0, 128, 0.08) 0,
+      rgba(0, 255, 128, 0.1) 1px,
+      rgba(255, 0, 128, 0.05) 2px,
+      transparent 3px
+    );
+  }
+  50% {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 255, 128, 0.1) 0,
+      rgba(255, 0, 128, 0.05) 1px,
+      rgba(0, 255, 128, 0.08) 2px,
+      transparent 3px
+    );
+  }
+  75% {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 0, 128, 0.05) 0,
+      rgba(0, 255, 128, 0.08) 1px,
+      rgba(255, 0, 128, 0.1) 2px,
+      transparent 3px
+    );
+  }
+  100% {
+    transform: translateY(100%);
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 255, 128, 0.05) 0,
+      rgba(255, 0, 128, 0.08) 1px,
+      rgba(0, 255, 128, 0.1) 2px,
+      transparent 3px
+    );
+  }
+}
+
+/* Matrix glitch effect using glitch colors */
+@keyframes matrix-glitch-header {
+  0%, 100% {
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    transform: translate(0);
+    color: #ff0080;
+  }
+  20% {
+    clip-path: polygon(0 0, 100% 0, 100% 25%, 0 25%);
+    transform: translate(-2px, -2px);
+    color: #ff3399;
+  }
+  40% {
+    clip-path: polygon(0 75%, 100% 75%, 100% 100%, 0 100%);
+    transform: translate(2px, 2px);
+    color: #ff0040;
+  }
+  60% {
+    clip-path: polygon(0 0, 100% 0, 100% 60%, 0 60%);
+    transform: translate(-1px, 1px);
+    color: #ff4080;
+  }
+  80% {
+    clip-path: polygon(0 40%, 100% 40%, 100% 100%, 0 100%);
+    transform: translate(1px, -1px);
+    color: #ff0080;
+  }
+}
+
+/* Enhanced hover effects */
+.matrix-container-header:hover {
+  filter: drop-shadow(0 0 8px rgba(0, 255, 128, 0.3)) drop-shadow(0 0 12px rgba(255, 0, 128, 0.2));
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .matrix-rain-header {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 255, 128, 0.03) 0,
+      rgba(255, 0, 128, 0.05) 1px,
+      rgba(0, 255, 128, 0.07) 2px,
+      transparent 3px
+    );
+  }
+  
+  .matrix-container-header:hover .matrix-text-header {
+    text-shadow: 
+      0 0 3px #00ff80, 
+      0 0 6px #00ff80, 
+      0 0 10px #ff0080;
+  }
+}
