@@ -38,35 +38,31 @@ export default function About() {
       name: 'Shiva Shankar',
       position: 'Ex - President',
       imageSrc: '/ShivaShankar.png',
-      linkedin: 'https://www.linkedin.com/in/shiva-shankar-b-aa36682a1/',
+      linkedinUrl: 'https://www.linkedin.com/in/shiva-shankar-b-aa36682a1/',
     },
     {
       name: 'Yash Kumar',
       position: 'Ex - Club Member',
       imageSrc: '/YashKumar.png',
-      linkedin: 'https://www.linkedin.com/in/yashkumar3066/',
-      placed_at: 'SDE @ Google',
+      linkedinUrl: 'https://www.linkedin.com/in/yashkumar3066/',
     },
     {
       name: 'Karkalle Shrinath',
       position: 'Ex - Treasurer',
       imageSrc: '/Shrinath.png',
-      linkedin: 'https://www.linkedin.com/in/karkalle-shrinath-94775325a/',
-      placed_at: 'Apprentship @ Boeing',
+      linkedinUrl: 'https://www.linkedin.com/in/karkalle-shrinath-94775325a/',
     },
     {
       name: 'Aditya Vikram Singh',
       position: 'Ex - Club Member',
       imageSrc: '/AdityaVikramSIngh.png',
-      linkedin: 'https://www.linkedin.com/in/aditya-vikram-singhgh-0a260a266/',
-      placed_at: 'Apprentship @ Boeing',
+      linkedinUrl: 'https://www.linkedin.com/in/aditya-vikram-singhgh-0a260a266/',
     },
     {
       name: 'Manish Nellimarla',
       position: 'Ex - Club Member',
       imageSrc: '/ManishNellimarla.png',
-      linkedin: 'https://www.linkedin.com/in/karkalle-shrinath-94775325a/', // Verify URL
-      placed_at: 'Apprentship @ Boeing',
+      linkedinUrl: 'https://www.linkedin.com/in/manish-nellimarla/', // Fixed URL
     },
   ];
 
@@ -75,46 +71,31 @@ export default function About() {
       name: 'Divyansh Mishra',
       position: 'President',
       imageSrc: '/DivyanshMishra.png',
-      gmail: '23bec016@iiitdwd.ac.in',
       linkedin: 'https://www.linkedin.com/in/divyansh-mishra-203664241/',
-      github: 'https://github.com/divyanshmishra1',
-      instagram: 'https://www.instagram.com/divyanshmishra9364/',
     },
     {
       name: 'Vibhav Deora',
       position: 'Secretary',
       imageSrc: '/VibhavDeora.png',
-      gmail: '23bec016@iiitdwd.ac.in',
       linkedin: 'https://www.linkedin.com/in/vaibhav-deora-582503290/',
-      github: 'https://github.com/divyanshmishra1',
-      instagram: 'https://www.instagram.com/divyanshmishra9364/',
     },
     {
       name: 'Tejas Vijay Dahake',
       position: 'Treasurer',
       imageSrc: '/TejasDahake.png',
-      gmail: '23bec016@iiitdwd.ac.in',
       linkedin: 'https://www.linkedin.com/in/tejas-vijay-dahake-7b5783359/',
-      github: 'https://github.com/divyanshmishra1',
-      instagram: 'https://www.instagram.com/divyanshmishra9364/',
     },
     {
       name: 'Ishaan Shetty',
       position: 'Club Member',
       imageSrc: '/IshaanShetty.png',
-      gmail: '23bec016@iiitdwd.ac.in',
       linkedin: 'https://www.linkedin.com/in/ishaan-shetty-b5241b334/',
-      github: 'https://github.com/divyanshmishra1',
-      instagram: 'https://www.instagram.com/divyanshmishra9364/',
     },
     {
       name: 'A S Mithil',
       position: 'Club Member',
       imageSrc: '/ASMithil.png',
-      gmail: '23bec016@iiitdwd.ac.in',
       linkedin: 'https://www.linkedin.com/in/mithil-a-36b79433b/',
-      github: 'https://github.com/divyanshmishra1',
-      instagram: 'https://www.instagram.com/divyanshmishra9364/',
     },
   ];
 
@@ -191,7 +172,13 @@ export default function About() {
             <h2 className="text-3xl font-bold text-white text-center mb-8">Alumni</h2>
             <div className={`${getGridClasses(alumni.length)} gap-4`}>
               {alumni.map((alumnus) => (
-                <MemberCard key={alumnus.name} {...alumnus} />
+                <MemberCard
+                  key={alumnus.name}
+                  name={alumnus.name}
+                  position={alumnus.position}
+                  imageSrc={alumnus.imageSrc}
+                  linkedin={alumnus.linkedinUrl}
+                />
               ))}
             </div>
           </section>
