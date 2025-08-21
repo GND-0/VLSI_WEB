@@ -469,3 +469,12 @@ body {
       0 0 10px #ff0080;
   }
 }
+
+@keyframes slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
