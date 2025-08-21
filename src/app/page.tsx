@@ -17,13 +17,14 @@ export default function Home() {
         className="relative flex flex-col items-center justify-center flex-grow p-8"
         style={{
           backgroundImage: "url('/image.png')", // Your starry background image
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'auto',
+          backgroundRepeat: 'repeat', 
+          backgroundPosition: 'top left',
+          imageRendering: 'crisp-edges',
         }}
       >
         {/* Hero Section */}
-        <main className="z-10 flex flex-col items-center text-center">
+        <main className="z-10 flex flex-col items-center text-center mt-30">
           <GlitchText
             h1Text="GND_0 VLSI CLUB IIIT DHARWAD"
             initialH3Text="Bridging Academia and Industry in Semiconductor Design."

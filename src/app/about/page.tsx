@@ -119,10 +119,11 @@ export default function About() {
       <div
         className="relative flex flex-col flex-grow p-8"
         style={{
-          backgroundImage: "url('/image.jpg')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          backgroundImage: "url('/image.png')",
+          backgroundSize: 'auto',
+          backgroundRepeat: 'repeat', 
+          backgroundPosition: 'top left',
+          imageRendering: 'crisp-edges',
         }}
       >
         <main className="z-10 max-w-7xl mx-auto w-full">
@@ -134,7 +135,7 @@ export default function About() {
             {leadership.length > 0 && (
               <div className="mb-12">
                 <h3 className="text-2xl font-semibold text-white text-center mb-6">Club Leadership</h3>
-                <div className={`${getGridClasses(leadership.length)} gap-4`}>
+                <div className={`${getGridClasses(leadership.length)}`}>
                   {leadership.map((member) => (
                     <MemberCard key={member.name} {...member} />
                   ))}
