@@ -26,7 +26,6 @@ export default function FacultyCard({ name, position, imageSrc, linkedin }: Facu
           alt={`${name}'s profile`}
           width={192}
           height={192}
-          unoptimized={true}
           className="h-48 w-48 rounded-full object-cover shadow-lg transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-full">

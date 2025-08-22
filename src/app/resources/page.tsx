@@ -25,7 +25,7 @@ function SkeletonCard() {
 }
 
 // Hardware Card Component (Improved with better hover, shadow)
-function HardwareCard({ item, onClick }: { item: any; onClick: () => void }) {
+function HardwareCard({ item, onClick }: { item: Hardware; onClick: () => void }) {
   return (
     <div
       className="relative flex flex-col items-center text-center cursor-pointer bg-black/60 backdrop-blur-md p-6 rounded-xl shadow-lg hover:bg-black/80 hover:shadow-xl transition-all duration-300"
@@ -50,7 +50,7 @@ function HardwareCard({ item, onClick }: { item: any; onClick: () => void }) {
 }
 
 // Drawer Component (Improved with fade-in, better close button, list styling)
-function Drawer({ isOpen, onClose, item }: { isOpen: boolean; onClose: () => void; item: any | null }) {
+function Drawer({ isOpen, onClose, item }: { isOpen: boolean; onClose: () => void; item: Hardware | null }) {
   if (!isOpen || !item) return null;
 
   return (
@@ -63,7 +63,7 @@ function Drawer({ isOpen, onClose, item }: { isOpen: boolean; onClose: () => voi
         <p className="text-gray-300 mb-6">{item.fullDescription}</p>
         <h3 className="text-xl font-semibold text-white mb-4">Learn More</h3>
         <ul className="space-y-3">
-          {item.links?.map((link: any, index: number) => (
+          {item.links?.map((link, index) => (
             <li key={index}>
               <a
                 href={link.url}
@@ -81,10 +81,27 @@ function Drawer({ isOpen, onClose, item }: { isOpen: boolean; onClose: () => voi
   );
 }
 
+interface Resource {
+  category: string;
+  title: string;
+  type: string;
+  description: string;
+  file?: { asset?: { url: string } };
+}
+
+interface Hardware {
+  name: string;
+  count: number;
+  shortDescription: string;
+  fullDescription: string;
+  image?: { asset?: { url: string } };
+  links?: Array<{ title: string; url: string }>;
+}
+
 export default function Resources() {
-  const [resources, setResources] = useState<any[]>([]);
-  const [hardware, setHardware] = useState<any[]>([]);
-  const [selectedHardware, setSelectedHardware] = useState<any | null>(null);
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [hardware, setHardware] = useState<Hardware[]>([]);
+  const [selectedHardware, setSelectedHardware] = useState<Hardware | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,13 +153,13 @@ export default function Resources() {
                 {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : resources.length > 0 ? (
-              Array.from(new Set(resources.map((r: any) => r.category))).map((category) => (
+              Array.from(new Set(resources.map((r) => r.category))).map((category) => (
                 <div key={category} className="mb-12">
                   <h3 className="text-2xl font-semibold mb-6">{category}</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {resources
-                      .filter((item: any) => item.category === category)
-                      .map((item: any, index: number) => (
+                      .filter((item) => item.category === category)
+                      .map((item, index) => (
                         <div key={index} className="bg-black/60 backdrop-blur-md p-6 rounded-xl shadow-lg hover:bg-black/80 hover:shadow-xl transition-all duration-300">
                           <h4 className="text-lg font-bold mb-2">{item.title}</h4>
                           <p className="text-gray-500 text-sm mb-2">{item.type}</p>
@@ -179,7 +196,7 @@ export default function Resources() {
               </div>
             ) : hardware.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {hardware.map((item: any, index: number) => (
+                {hardware.map((item, index) => (
                   <HardwareCard key={index} item={item} onClick={() => setSelectedHardware(item)} />
                 ))}
               </div>

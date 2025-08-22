@@ -1,4 +1,3 @@
-// src/app/about/page.tsx
 "use client";
 
 import { Inter } from 'next/font/google';
@@ -76,7 +75,7 @@ export default function About() {
         setAlumni(data.alumni || []);
         setMembers(data.members || []);
         console.log('Fetched data:', data);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Error fetching data from API:', error);
         setError('Failed to load data. Please try again later.');
       } finally {
@@ -126,7 +125,7 @@ export default function About() {
           <section className="py-12">
             <h2 className="text-4xl font-bold text-white text-center mb-8">Our Team</h2>
             <p className="text-gray-400 text-center mb-12 max-w-3xl mx-auto">
-              Meet the dedicated individuals driving our club&apos;s mission to advance VLSI design and innovation.
+              Meet the dedicated individuals driving our club&#39;s mission to advance VLSI design and innovation.
             </p>
 
             {error ? (
@@ -150,7 +149,7 @@ export default function About() {
                           key={member._id}
                           name={member.name}
                           position={member.position}
-                          imageSrc={member.image?.asset?.url || '/placeholder.png'}
+                          imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : '/placeholder.png'}
                           linkedin={member.linkedin}
                         />
                       ))}
@@ -177,7 +176,7 @@ export default function About() {
                           key={member._id}
                           name={member.name}
                           position={member.position}
-                          imageSrc={member.image?.asset?.url || '/placeholder.png'}
+                          imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : '/placeholder.png'}
                           linkedin={member.linkedin}
                         />
                       ))}
@@ -204,7 +203,7 @@ export default function About() {
                           key={member._id}
                           name={member.name}
                           position={member.position}
-                          imageSrc={member.image?.asset?.url || '/placeholder.png'}
+                          imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : '/placeholder.png'}
                           linkedin={member.linkedin}
                         />
                       ))}
@@ -237,7 +236,7 @@ export default function About() {
                     name={alumnus.name}
                     position={alumnus.position}
                     placed_at={alumnus.placed_at}
-                    imageSrc={alumnus.image?.asset?.url || '/placeholder.png'}
+                    imageSrc={alumnus.image?.asset?.url ? `${alumnus.image.asset.url}?w=384&h=384` : '/placeholder.png'}
                     linkedin={alumnus.linkedin}
                   />
                 ))}
@@ -263,7 +262,7 @@ export default function About() {
                     key={mentor._id}
                     name={mentor.name}
                     position={mentor.institute_position}
-                    imageSrc={mentor.image?.asset?.url || '/placeholder.png'}
+                    imageSrc={mentor.image?.asset?.url ? `${mentor.image.asset.url}?w=384&h=384` : '/placeholder.png'}
                     linkedin={mentor.linkedin}
                   />
                 ))}
@@ -289,7 +288,7 @@ export default function About() {
                     key={faculty._id}
                     name={faculty.name}
                     position={faculty.institute_position}
-                    imageSrc={faculty.image?.asset?.url || '/placeholder.png'}
+                    imageSrc={faculty.image?.asset?.url ? `${faculty.image.asset.url}?w=384&h=384` : '/placeholder.png'}
                     linkedin={faculty.linkedin}
                   />
                 ))}

@@ -27,7 +27,6 @@ export default function AlumniCard({ name, position, placed_at, imageSrc, linked
           alt={`${name}'s profile`}
           width={192}
           height={192}
-          unoptimized={true}
           className="h-48 w-48 rounded-full object-cover border-2 border-gray-300 shadow-lg transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gray-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-full">

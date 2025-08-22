@@ -26,7 +26,7 @@ export default function MemberCard({ name, position, imageSrc, linkedin }: Membe
           alt={`${name}'s profile`}
           width={192}
           height={192}
-          unoptimized={true}
+          unoptimized={true} // Bypass Next.js optimization
           className="h-48 w-48 rounded-full object-cover border-2 border-blue-500 shadow-lg transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-blue-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-full">
