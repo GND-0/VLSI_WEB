@@ -2,6 +2,7 @@
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import { Linkedin } from 'lucide-react';
+import Image from 'next/image';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -20,9 +21,12 @@ export default function FacultyCard({ name, position, imageSrc, linkedin }: Facu
   return (
     <div className={`flex flex-col items-center text-center animate-fade-in ${inter.className}`}>
       <div className="relative group">
-        <img
+        <Image
           src={imageSrc || '/placeholder.png'}
           alt={`${name}'s profile`}
+          width={192}
+          height={192}
+          unoptimized={true}
           className="h-48 w-48 rounded-full object-cover shadow-lg transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-full">

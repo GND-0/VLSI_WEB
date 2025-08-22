@@ -44,8 +44,8 @@ export default function GlitchText({ h1Text, initialH3Text }: GlitchTextProps) {
         setIsGlitching(false);
         setFontIndex((prev) => (prev + 1) % fonts.length);
         setTextIndex((prev) => (prev + 1) % stockTexts.length);
-      }, 1200); // Extended glitch duration for more dramatic effect
-    }, 7000); // Slightly faster trigger
+      }, 1200); // Glitch duration
+    }, 7000); // Trigger interval
 
     return () => clearInterval(glitchInterval);
   }, []);
@@ -66,7 +66,7 @@ export default function GlitchText({ h1Text, initialH3Text }: GlitchTextProps) {
         {h1Text}
       </h1>
       <h3
-        className={`text-2xl sm:text-2xl md:text-2xl font-bold text-white tracking-tight mt-8 transition-all duration-300 ${
+        className={`text-xl sm:text-2xl md:text-2xl font-medium text-gray-300 tracking-tight mt-8 transition-all duration-300 ${
           isGlitching ? `glitch-enhanced glitch-intensity-${glitchIntensity}` : ''
         }`}
         data-text={stockTexts[textIndex]}

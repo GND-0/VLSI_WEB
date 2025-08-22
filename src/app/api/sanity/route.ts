@@ -2,6 +2,11 @@
 import { client } from '../../../../lib/sanityClient';
 import { NextResponse } from 'next/server';
 
+async function fetchWithTimeout(client: any, query: string, timeout = 10000) {
+  const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Sanity fetch timeout')), timeout));
+  return Promise.race([client.fetch(query), timeoutPromise]);
+}
+
 export async function GET() {
   try {
     const resourcesQuery = `*[_type == "resource"] {
@@ -25,13 +30,11 @@ export async function GET() {
       image { asset -> { url } }
     }`;
 
-    const [resources, hardware, members, faculty, alumni] = await Promise.all([
-      client.fetch(resourcesQuery),
-      client.fetch(hardwareQuery),
-      client.fetch(membersQuery),
-      client.fetch(facultyQuery),
-      client.fetch(alumniQuery),
-    ]);
+    const resources = await fetchWithTimeout(client, resourcesQuery);
+    const hardware = await fetchWithTimeout(client, hardwareQuery);
+    const members = await fetchWithTimeout(client, membersQuery);
+    const faculty = await fetchWithTimeout(client, facultyQuery);
+    const alumni = await fetchWithTimeout(client, alumniQuery);
 
     return NextResponse.json({ resources, hardware, members, faculty, alumni });
   } catch (error) {

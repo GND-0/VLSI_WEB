@@ -16,6 +16,32 @@ const inter = Inter({
   display: 'swap',
 });
 
+interface Member {
+  _id: string;
+  name: string;
+  position: string;
+  linkedin: string;
+  image?: { asset?: { url: string } };
+}
+
+interface Faculty {
+  _id: string;
+  name: string;
+  position: string;
+  institute_position: string;
+  linkedin: string;
+  image?: { asset?: { url: string } };
+}
+
+interface Alumni {
+  _id: string;
+  name: string;
+  position: string;
+  placed_at: string;
+  linkedin: string;
+  image?: { asset?: { url: string } };
+}
+
 // Skeleton Loader Component
 function SkeletonCard() {
   return (
@@ -28,9 +54,9 @@ function SkeletonCard() {
 }
 
 export default function About() {
-  const [faculty, setFaculty] = useState<any[]>([]);
-  const [alumni, setAlumni] = useState<any[]>([]);
-  const [members, setMembers] = useState<any[]>([]);
+  const [faculty, setFaculty] = useState<Faculty[]>([]);
+  const [alumni, setAlumni] = useState<Alumni[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,7 +65,10 @@ export default function About() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('/api/sanity');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+        const response = await fetch('/api/sanity', { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         if (data.error) throw new Error(data.error);
@@ -59,18 +88,18 @@ export default function About() {
 
   // Group members by hierarchy with President before Secretary
   const leadership = members
-    .filter((member: any) => ['President', 'Secretary'].includes(member.position))
-    .sort((a: any, b: any) => {
+    .filter((member) => ['President', 'Secretary'].includes(member.position))
+    .sort((a, b) => {
       if (a.position === 'President') return -1;
       if (b.position === 'President') return 1;
       return 0;
     });
-  const treasurer = members.filter((member: any) => member.position === 'Treasurer');
-  const clubMembers = members.filter((member: any) => member.position === 'Member');
+  const treasurer = members.filter((member) => member.position === 'Treasurer');
+  const clubMembers = members.filter((member) => member.position === 'Member');
 
   // Group faculty by position
-  const facultyMentor = faculty.filter((f: any) => f.position === 'Faculty Mentor');
-  const facultyGuides = faculty.filter((f: any) => f.position === 'Faculty Guide');
+  const facultyMentor = faculty.filter((f) => f.position === 'Faculty Mentor');
+  const facultyGuides = faculty.filter((f) => f.position === 'Faculty Guide');
 
   // Dynamic grid class helper
   const getGridClasses = (itemCount: number) => {
@@ -97,7 +126,7 @@ export default function About() {
           <section className="py-12">
             <h2 className="text-4xl font-bold text-white text-center mb-8">Our Team</h2>
             <p className="text-gray-400 text-center mb-12 max-w-3xl mx-auto">
-              Meet the dedicated individuals driving our club's mission to advance VLSI design and innovation.
+              Meet the dedicated individuals driving our club&apos;s mission to advance VLSI design and innovation.
             </p>
 
             {error ? (
@@ -116,7 +145,7 @@ export default function About() {
                   <div className="mb-12">
                     <h3 className="text-2xl font-semibold text-white text-center mb-6">Club Leadership</h3>
                     <div className={`${getGridClasses(leadership.length)} gap-6`}>
-                      {leadership.map((member: any) => (
+                      {leadership.map((member) => (
                         <MemberCard
                           key={member._id}
                           name={member.name}
@@ -143,7 +172,7 @@ export default function About() {
                   <div className="mb-12">
                     <h3 className="text-2xl font-semibold text-white text-center mb-6">Treasurer</h3>
                     <div className={`${getGridClasses(treasurer.length)} gap-6`}>
-                      {treasurer.map((member: any) => (
+                      {treasurer.map((member) => (
                         <MemberCard
                           key={member._id}
                           name={member.name}
@@ -170,7 +199,7 @@ export default function About() {
                   <div>
                     <h3 className="text-2xl font-semibold text-white text-center mb-6">Club Members</h3>
                     <div className={`${getGridClasses(clubMembers.length)} gap-6`}>
-                      {clubMembers.map((member: any) => (
+                      {clubMembers.map((member) => (
                         <MemberCard
                           key={member._id}
                           name={member.name}
@@ -188,7 +217,7 @@ export default function About() {
             )}
           </section>
 
-          /* Alumni */
+          {/* Alumni */}
           <section className="py-12">
             <h2 className="text-4xl font-bold text-white text-center mb-8">Alumni</h2>
             <p className="text-gray-400 text-center mb-12 max-w-3xl mx-auto">
@@ -202,7 +231,7 @@ export default function About() {
               </div>
             ) : alumni.length > 0 ? (
               <div className={`${getGridClasses(alumni.length)} gap-6`}>
-                {alumni.map((alumnus: any) => (
+                {alumni.map((alumnus) => (
                   <AlumniCard
                     key={alumnus._id}
                     name={alumnus.name}
@@ -218,7 +247,7 @@ export default function About() {
             )}
           </section>
 
-          /* Faculty Mentor */
+          {/* Faculty Mentor */}
           <section className="py-12">
             <h2 className="text-4xl font-bold text-white text-center mb-8">Faculty Mentor</h2>
             {error ? (
@@ -229,7 +258,7 @@ export default function About() {
               </div>
             ) : facultyMentor.length > 0 ? (
               <div className="flex justify-center">
-                {facultyMentor.map((mentor: any) => (
+                {facultyMentor.map((mentor) => (
                   <FacultyCard
                     key={mentor._id}
                     name={mentor.name}
@@ -244,7 +273,7 @@ export default function About() {
             )}
           </section>
 
-          /* Faculty Guides */
+          {/* Faculty Guides */}
           <section className="py-12">
             <h2 className="text-4xl font-bold text-white text-center mb-8">Faculty Guides</h2>
             {error ? (
@@ -255,7 +284,7 @@ export default function About() {
               </div>
             ) : facultyGuides.length > 0 ? (
               <div className={`${getGridClasses(facultyGuides.length)} gap-6`}>
-                {facultyGuides.map((faculty: any) => (
+                {facultyGuides.map((faculty) => (
                   <FacultyCard
                     key={faculty._id}
                     name={faculty.name}
@@ -270,7 +299,7 @@ export default function About() {
             )}
           </section>
 
-          /* View Club Projects Button */
+          {/* View Club Projects Button */}
           <div className="py-12 flex justify-center">
             <Link
               href="/projects"

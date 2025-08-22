@@ -1,6 +1,7 @@
 "use client";
 import localFont from 'next/font/local';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 const customFont = localFont({
@@ -25,9 +26,11 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo and Club Name */}
           <Link href="/" className="flex items-center space-x-2 matrix-container-header">
-            <img
-              src="logo.png" // Replace with your logo file name, e.g., '/images/logo.png'
+            <Image
+              src="/logo.png" // Ensure this path is correct in your public/ directory
               alt="GND_0 VLSI Club Logo"
+              width={40}
+              height={40}
               className="h-10 w-10 object-contain rounded-full"
             />
             <span 

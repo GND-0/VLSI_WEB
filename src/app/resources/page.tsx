@@ -1,20 +1,11 @@
 // src/app/resources/page.tsx
-// Updated version with UI improvements:
-// - Better responsive design (e.g., adjusted grid columns, padding).
-// - Added loading skeleton for better UX.
-// - Improved card designs with shadows, hover effects, and truncation handling.
-// - Fixed potential issues with data rendering (e.g., safer optional chaining).
-// - Added error state handling for fetch.
-// - Enhanced drawer with better styling, scroll handling, and close button.
-// - Updated background to be less aggressive (removed pixelated rendering if not needed; adjust as preferred).
-// - Used Tailwind classes more consistently for dark theme.
-
 "use client";
 
 import { Inter } from 'next/font/google';
 import Header from '../../components/header';
 import Footer from '../../components/footer';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -41,9 +32,11 @@ function HardwareCard({ item, onClick }: { item: any; onClick: () => void }) {
       onClick={onClick}
     >
       <div className="relative">
-        <img
+        <Image
           src={item.image?.asset?.url || '/placeholder.png'} // Fallback image
           alt={item.name}
+          width={192}
+          height={192}
           className="h-48 w-48 object-cover rounded-lg"
         />
         <span className="absolute top-2 right-2 bg-white/30 text-white px-3 py-1 rounded-full text-sm font-bold">
