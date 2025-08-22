@@ -3,9 +3,8 @@ import localFont from 'next/font/local';
 import Link from 'next/link';
 import { useState } from 'react';
 
-// Load the custom font
 const customFont = localFont({
-  src: 'f1.ttf', // Replace with your .ttf file name, e.g., '/MyCustomFont.ttf'
+  src: 'f1.ttf',
   display: 'swap',
 });
 

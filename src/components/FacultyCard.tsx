@@ -1,3 +1,4 @@
+// src/components/FacultyCard.tsx
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import { Linkedin } from 'lucide-react';
@@ -12,24 +13,26 @@ interface FacultyCardProps {
   name: string;
   position: string;
   imageSrc: string;
-  linkedinUrl: string;
+  linkedin: string;
 }
 
-export default function FacultyCard({ name, position, imageSrc, linkedinUrl }: FacultyCardProps) {
+export default function FacultyCard({ name, position, imageSrc, linkedin }: FacultyCardProps) {
   return (
-    <div className={`flex flex-col items-center text-center ${inter.className}`}>
-      <Link href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="group relative">
+    <div className={`flex flex-col items-center text-center animate-fade-in ${inter.className}`}>
+      <div className="relative group">
         <img
-          src={imageSrc}
+          src={imageSrc || '/placeholder.png'}
           alt={`${name}'s profile`}
-          className="h-48 w-48 object-cover rounded-lg transition-all duration-300 group-hover:brightness-75"
+          className="h-48 w-48 rounded-full object-cover shadow-lg transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-full group-hover:translate-y-0 flex items-center justify-center">
-          <Linkedin className="h-8 w-8 text-white" />
+        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-full">
+          <Link href={linkedin} target="_blank" rel="noopener noreferrer">
+            <Linkedin className="h-8 w-8 text-white" />
+          </Link>
         </div>
-      </Link>
-      <h3 className="mt-4 text-lg font-semibold text-white">{name}</h3>
-      <p className="text-gray-300">{position}</p>
+      </div>
+      <h3 className="mt-4 text-xl font-semibold text-white">{name}</h3>
+      <p className="text-gray-400 text-sm">{position}</p>
     </div>
   );
 }
