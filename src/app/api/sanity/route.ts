@@ -15,19 +15,19 @@ export async function GET() {
     }`;
     const hardwareQuery = `*[_type == "hardwareComponent"] {
       ...,
-      image { asset -> { url } }
+      image { asset -> { url: url + "?w=384&h=384" } }
     }`;
     const membersQuery = `*[_type == "members"] {
       ...,
-      image { asset -> { url } }
+      image { asset -> { url: url + "?w=384&h=384" } }
     }`;
     const facultyQuery = `*[_type == "faculty"] {
       ...,
-      image { asset -> { url } }
+      image { asset -> { url: url + "?w=384&h=384" } }
     }`;
     const alumniQuery = `*[_type == "alumni"] {
       ...,
-      image { asset -> { url } }
+      image { asset -> { url: url + "?w=384&h=384" } }
     }`;
 
     const resources = await fetchWithTimeout(client, resourcesQuery);
