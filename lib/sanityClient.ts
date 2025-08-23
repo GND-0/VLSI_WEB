@@ -1,25 +1,34 @@
-// lib/sanityClient.ts
-import { createClient } from '@sanity/client';
+import { createClient } from 'next-sanity';
 
-const token = process.env.SANITY_TOKEN; // Ensure this is in .env.local
+// Validate environment variables
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+const token = process.env.SANITY_TOKEN;
+
+if (!projectId || !dataset || !token) {
+  throw new Error(
+    'Missing Sanity environment variables. Ensure NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET, and SANITY_TOKEN are set in .env.local'
+  );
+}
 
 console.log('Sanity config (server-side):', {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  projectId,
+  dataset,
   token: token ? 'present' : 'not set',
 });
 
 export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  useCdn: false, // Use direct API
-  apiVersion: '2021-06-07',
-  token: token, // Use token server-side
+  projectId,
+  dataset,
+  useCdn: false, // Use direct API to avoid caching issues
+  apiVersion: '2025-08-23', // Use current date for latest API version
+  token, // Use token server-side
 });
 
+// Client-side logging for debugging
 if (typeof window !== 'undefined') {
   console.log('Sanity config (client-side):', {
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    projectId,
+    dataset,
   });
 }
