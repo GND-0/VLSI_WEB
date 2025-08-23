@@ -1,8 +1,8 @@
-// src/app/api/sanity/route.ts
 import { client } from '../../../../lib/sanityClient';
 import { NextResponse } from 'next/server';
+import { SanityClient } from 'next-sanity';
 
-async function fetchWithTimeout(client: any, query: string, timeout = 10000) {
+async function fetchWithTimeout(client: SanityClient, query: string, timeout = 15000) {
   const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('Sanity fetch timeout')), timeout));
   return Promise.race([client.fetch(query), timeoutPromise]);
 }
@@ -15,19 +15,19 @@ export async function GET() {
     }`;
     const hardwareQuery = `*[_type == "hardwareComponent"] {
       ...,
-      image { asset -> { url: url + "?w=384&h=384" } }
+      image { asset -> { url } }
     }`;
     const membersQuery = `*[_type == "members"] {
       ...,
-      image { asset -> { url: url + "?w=384&h=384" } }
+      image { asset -> { url } }
     }`;
     const facultyQuery = `*[_type == "faculty"] {
       ...,
-      image { asset -> { url: url + "?w=384&h=384" } }
+      image { asset -> { url } }
     }`;
     const alumniQuery = `*[_type == "alumni"] {
       ...,
-      image { asset -> { url: url + "?w=384&h=384" } }
+      image { asset -> { url } }
     }`;
 
     const resources = await fetchWithTimeout(client, resourcesQuery);
@@ -37,8 +37,9 @@ export async function GET() {
     const alumni = await fetchWithTimeout(client, alumniQuery);
 
     return NextResponse.json({ resources, hardware, members, faculty, alumni });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Error in /api/sanity:', error);
-    return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch data';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

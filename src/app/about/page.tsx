@@ -65,7 +65,7 @@ export default function About() {
       setError(null);
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // Increased to 15s
         const response = await fetch('/api/sanity', { signal: controller.signal });
         clearTimeout(timeoutId);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -77,7 +77,8 @@ export default function About() {
         console.log('Fetched data:', data);
       } catch (error: unknown) {
         console.error('Error fetching data from API:', error);
-        setError('Failed to load data. Please try again later.');
+        const errorMessage = error instanceof Error ? error.message : 'Failed to load data. Please try again later.';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
