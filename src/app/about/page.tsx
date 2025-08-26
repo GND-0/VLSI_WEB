@@ -1,18 +1,18 @@
 "use client";
 
-import { Inter } from 'next/font/google';
-import Header from '../../components/header';
-import Footer from '../../components/footer';
-import FacultyCard from '../../components/FacultyCard';
-import MemberCard from '../../components/MemberCard';
-import AlumniCard from '../../components/AlumniCard';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Inter } from "next/font/google";
+import Header from "../../components/header";
+import Footer from "../../components/footer";
+import FacultyCard from "../../components/FacultyCard";
+import MemberCard from "../../components/MemberCard";
+import AlumniCard from "../../components/AlumniCard";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '600'],
-  display: 'swap',
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  display: "swap",
 });
 
 interface Member {
@@ -66,7 +66,7 @@ export default function About() {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 15000); // Increased to 15s
-        const response = await fetch('/api/sanity', { signal: controller.signal });
+        const response = await fetch("/api/sanity", { signal: controller.signal });
         clearTimeout(timeoutId);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
@@ -74,10 +74,10 @@ export default function About() {
         setFaculty(data.faculty || []);
         setAlumni(data.alumni || []);
         setMembers(data.members || []);
-        console.log('Fetched data:', data);
+        console.log("Fetched data:", data);
       } catch (error: unknown) {
-        console.error('Error fetching data from API:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Failed to load data. Please try again later.';
+        console.error("Error fetching data from API:", error);
+        const errorMessage = error instanceof Error ? error.message : "Failed to load data. Please try again later.";
         setError(errorMessage);
       } finally {
         setLoading(false);
@@ -86,26 +86,24 @@ export default function About() {
     fetchData();
   }, []);
 
-  // Group members by hierarchy with President before Secretary
+  // Group members by hierarchy with President, Secretary, and Treasurer
   const leadership = members
-    .filter((member) => ['President', 'Secretary'].includes(member.position))
+    .filter((member) => ["President", "Secretary", "Treasurer"].includes(member.position))
     .sort((a, b) => {
-      if (a.position === 'President') return -1;
-      if (b.position === 'President') return 1;
-      return 0;
+      const order: Record<string, number> = { President: 0, Secretary: 1, Treasurer: 2 };
+      return order[a.position] - order[b.position];
     });
-  const treasurer = members.filter((member) => member.position === 'Treasurer');
-  const clubMembers = members.filter((member) => member.position === 'Member');
+  const clubMembers = members.filter((member) => member.position === "Member");
 
   // Group faculty by position
-  const facultyMentor = faculty.filter((f) => f.position === 'Faculty Mentor');
-  const facultyGuides = faculty.filter((f) => f.position === 'Faculty Guide');
+  const facultyMentor = faculty.filter((f) => f.position === "Faculty Mentor");
+  const facultyGuides = faculty.filter((f) => f.position === "Faculty Guide");
 
   // Dynamic grid class helper
   const getGridClasses = (itemCount: number) => {
-    if (itemCount === 1) return 'grid grid-cols-1 justify-items-center';
-    if (itemCount === 2) return 'grid grid-cols-1 sm:grid-cols-2 justify-items-center';
-    return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center';
+    if (itemCount === 1) return "grid grid-cols-1 justify-items-center";
+    if (itemCount === 2) return "grid grid-cols-1 sm:grid-cols-2 justify-items-center";
+    return "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center";
   };
 
   return (
@@ -115,10 +113,10 @@ export default function About() {
         className="relative flex flex-col flex-grow p-4 sm:p-8"
         style={{
           backgroundImage: "url('/image.png')",
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <main className="z-10 max-w-7xl mx-auto w-full">
@@ -133,12 +131,12 @@ export default function About() {
               <p className="text-red-400 text-center">{error}</p>
             ) : (
               <>
-                {/* Club Leadership (President & Secretary) */}
+                {/* Club Leadership (President, Secretary, and Treasurer) */}
                 {loading ? (
                   <div className="mb-12">
                     <h3 className="text-2xl font-semibold text-white text-center mb-6">Club Leadership</h3>
-                    <div className={`${getGridClasses(2)} gap-6`}>
-                      {[...Array(2)].map((_, i) => <SkeletonCard key={i} />)}
+                    <div className={`${getGridClasses(3)} gap-6`}>
+                      {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
                     </div>
                   </div>
                 ) : leadership.length > 0 ? (
@@ -150,7 +148,7 @@ export default function About() {
                           key={member._id}
                           name={member.name}
                           position={member.position}
-                          imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : '/placeholder.png'}
+                          imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : "/placeholder.png"}
                           linkedin={member.linkedin}
                         />
                       ))}
@@ -158,33 +156,6 @@ export default function About() {
                   </div>
                 ) : (
                   <p className="text-gray-400 text-center">No leadership members available.</p>
-                )}
-
-                {/* Treasurer */}
-                {loading ? (
-                  <div className="mb-12">
-                    <h3 className="text-2xl font-semibold text-white text-center mb-6">Treasurer</h3>
-                    <div className={`${getGridClasses(1)} gap-6`}>
-                      <SkeletonCard />
-                    </div>
-                  </div>
-                ) : treasurer.length > 0 ? (
-                  <div className="mb-12">
-                    <h3 className="text-2xl font-semibold text-white text-center mb-6">Treasurer</h3>
-                    <div className={`${getGridClasses(treasurer.length)} gap-6`}>
-                      {treasurer.map((member) => (
-                        <MemberCard
-                          key={member._id}
-                          name={member.name}
-                          position={member.position}
-                          imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : '/placeholder.png'}
-                          linkedin={member.linkedin}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-gray-400 text-center">No treasurer available.</p>
                 )}
 
                 {/* Club Members */}
@@ -204,7 +175,7 @@ export default function About() {
                           key={member._id}
                           name={member.name}
                           position={member.position}
-                          imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : '/placeholder.png'}
+                          imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : "/placeholder.png"}
                           linkedin={member.linkedin}
                         />
                       ))}
@@ -237,7 +208,7 @@ export default function About() {
                     name={alumnus.name}
                     position={alumnus.position}
                     placed_at={alumnus.placed_at}
-                    imageSrc={alumnus.image?.asset?.url ? `${alumnus.image.asset.url}?w=384&h=384` : '/placeholder.png'}
+                    imageSrc={alumnus.image?.asset?.url ? `${alumnus.image.asset.url}?w=384&h=384` : "/placeholder.png"}
                     linkedin={alumnus.linkedin}
                   />
                 ))}
@@ -263,7 +234,7 @@ export default function About() {
                     key={mentor._id}
                     name={mentor.name}
                     position={mentor.institute_position}
-                    imageSrc={mentor.image?.asset?.url ? `${mentor.image.asset.url}?w=384&h=384` : '/placeholder.png'}
+                    imageSrc={mentor.image?.asset?.url ? `${mentor.image.asset.url}?w=384&h=384` : "/placeholder.png"}
                     linkedin={mentor.linkedin}
                   />
                 ))}
@@ -289,7 +260,7 @@ export default function About() {
                     key={faculty._id}
                     name={faculty.name}
                     position={faculty.institute_position}
-                    imageSrc={faculty.image?.asset?.url ? `${faculty.image.asset.url}?w=384&h=384` : '/placeholder.png'}
+                    imageSrc={faculty.image?.asset?.url ? `${faculty.image.asset.url}?w=384&h=384` : "/placeholder.png"}
                     linkedin={faculty.linkedin}
                   />
                 ))}
