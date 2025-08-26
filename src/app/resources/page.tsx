@@ -39,7 +39,7 @@ function HardwareCard({ item, onClick }: { item: Hardware; onClick: () => void }
           height={192}
           className="h-48 w-48 object-cover rounded-lg"
         />
-        <span className="absolute top-2 right-2 bg-white/30 text-white px-3 py-1 rounded-full text-sm font-bold">
+        <span className="absolute top-2 right-2 bg-black/100 text-white px-3 py-1 rounded-full text-sm font-bold">
           x {item.count ?? 0}
         </span>
       </div>

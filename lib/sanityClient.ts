@@ -3,7 +3,7 @@ import { createClient } from 'next-sanity';
 // Validate environment variables
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
-const token = process.env.SANITY_TOKEN;
+const token = process.env.SANITY_WRITE_TOKEN;
 
 if (!projectId || !dataset || !token) {
   throw new Error(
