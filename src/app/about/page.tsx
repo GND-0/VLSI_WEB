@@ -20,6 +20,7 @@ interface Member {
   name: string;
   position: string;
   linkedin: string;
+  order?: number;
   image?: { asset?: { url: string } };
 }
 
@@ -38,6 +39,7 @@ interface Alumni {
   position: string;
   placed_at: string;
   linkedin: string;
+  order?: number;
   image?: { asset?: { url: string } };
 }
 
@@ -93,7 +95,12 @@ export default function About() {
       const order: Record<string, number> = { President: 0, Secretary: 1, Treasurer: 2 };
       return order[a.position] - order[b.position];
     });
-  const clubMembers = members.filter((member) => member.position === "Member");
+  const clubMembers = members
+    .filter((member) => member.position === "Member")
+    .sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
+
+  // Sort alumni by order
+  const sortedAlumni = alumni.sort((a, b) => (a.order ?? Infinity) - (b.order ?? Infinity));
 
   // Group faculty by position
   const facultyMentor = faculty.filter((f) => f.position === "Faculty Mentor");
@@ -200,9 +207,9 @@ export default function About() {
               <div className={`${getGridClasses(3)} gap-6`}>
                 {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
-            ) : alumni.length > 0 ? (
-              <div className={`${getGridClasses(alumni.length)} gap-6`}>
-                {alumni.map((alumnus) => (
+            ) : sortedAlumni.length > 0 ? (
+              <div className={`${getGridClasses(sortedAlumni.length)} gap-6`}>
+                {sortedAlumni.map((alumnus) => (
                   <AlumniCard
                     key={alumnus._id}
                     name={alumnus.name}
