@@ -7,11 +7,10 @@ import GlitchText from '../components/GlitchText';
 import { useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 // Load the custom font from the public directory
 const customFont = localFont({
-  src: '/../components/f1.ttf', // Updated to your font file path
+  src: '/../components/f1.ttf',
   display: 'swap',
 });
 
@@ -34,7 +33,7 @@ interface HotTopic {
 
 export default function Home() {
   const [hotTopics, setHotTopics] = useState<HotTopic[]>([]);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start', slidesToShow: 1, breakpoints: { '(min-width: 768px)': { slidesToShow: 3 } } });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start', slidesToScroll: 1 });
 
   // Fetch data
   useEffect(() => {
@@ -92,34 +91,14 @@ export default function Home() {
             <div className="embla overflow-hidden" ref={emblaRef}>
               <div className="embla__container flex gap-4">
                 {hotTopics.map((topic) => (
-                  <div key={topic._id} className="embla__slide flex-[0_0_100%] md:flex-[0_0_33.33%] min-w-0">
-                    <div className="bg-gray-900 border border-blue-500/30 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105">
-                      {topic.imagery && topic.imagery[0] && topic.imagery[0].image.asset.url && (
-                        <div className="relative h-48">
-                          <Image
-                            src={topic.imagery[0].image.asset.url}
-                            alt={topic.imagery[0].description || topic.title}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                        </div>
-                      )}
-                      <div className="p-6 relative">
-                        <span className="absolute top-2 right-2 px-2 py-1 text-xs font-semibold text-white bg-purple-600 rounded-full">{topic.category}</span>
-                        <Link href={`/vlsipulse?topic=${topic._id}`} className="block text-xl font-bold text-white hover:text-blue-300 mb-2">
-                          {topic.title}
-                        </Link>
-                        <p className="text-sm text-gray-300 line-clamp-3 mb-4">{topic.summary}</p>
-                        <div className="flex justify-between items-center text-xs text-gray-400">
-                          <span>{topic.author || 'Anonymous'}</span>
-                          <span>{new Date(topic.publishDate).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex justify-between items-center mt-2 text-xs text-gray-400">
-                          <span>👍 {topic.upvotes || 0}</span>
-                          <span>👀 {topic.views || 0}</span>
-                          {topic.isVerified && <span className="text-green-500 font-semibold">Verified ✓</span>}
-                        </div>
+                  <div key={topic._id} className="embla__slide flex-[0_0_300px] min-w-0">
+                    <div className="bg-gray-900 border border-blue-500/30 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 p-6">
+                      <Link href="/vlsiPulse" className="block text-xl font-bold text-white hover:text-blue-300 mb-2">
+                        {topic.title}
+                      </Link>
+                      <div className="flex justify-between items-center text-xs text-gray-400 mt-4">
+                        <span>👍 {topic.upvotes || 0}</span>
+                        <span>👀 {topic.views || 0}</span>
                       </div>
                     </div>
                   </div>
