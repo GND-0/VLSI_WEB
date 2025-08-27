@@ -87,11 +87,12 @@ export default function Home() {
   // Update selected index for dots
   useEffect(() => {
     if (!emblaApi) return;
-    const onSelect = () => {
-      setSelectedIndex(emblaApi.selectedScrollSnap());
-    };
-    emblaApi.on("select", onSelect);
-    return () => emblaApi.off("select", onSelect);
+
+    const interval = setInterval(() => {
+      emblaApi.scrollNext();
+    }, 4000); // Slower scroll for better readability
+
+    return () => clearInterval(interval); // Cleanup function
   }, [emblaApi]);
 
   return (
