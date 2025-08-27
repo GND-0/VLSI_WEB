@@ -40,6 +40,7 @@ export async function GET() {
     }`;
     const hotTopicsQuery = `*[_type == "hotTopics"] | order(publishDate desc) {
       ...,
+      thumbnail { asset -> { url } },
       imagery[] {
         ...,
         image { asset -> { url } }

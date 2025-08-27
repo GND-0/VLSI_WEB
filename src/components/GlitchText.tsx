@@ -1,25 +1,104 @@
-// src/components/GlitchText.tsx
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Inter, Roboto, Poppins, Lora, Merriweather } from 'next/font/google';
+import { 
+  Fira_Code, JetBrains_Mono, Orbitron, Rajdhani, Space_Mono,
+  Exo_2, Chivo_Mono, Share_Tech_Mono, Overpass_Mono, IBM_Plex_Mono,
+  Source_Code_Pro, Anonymous_Pro, Inconsolata, Cousine, Teko,
+  Saira, Titillium_Web, Rubik, Oxygen_Mono, VT323,
+  Press_Start_2P, Audiowide, Quantico, Electrolize, Oxanium,
+  B612_Mono, Major_Mono_Display
+} from 'next/font/google';
 
-// Define fonts for cycling
-const inter = Inter({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
-const roboto = Roboto({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
-const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
-const lora = Lora({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
-const merriweather = Merriweather({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+// Define font loaders as individual constants at module scope
+const firaCode = Fira_Code({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const jetBrainsMono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const orbitron = Orbitron({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const rajdhani = Rajdhani({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const spaceMono = Space_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const exo2 = Exo_2({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const chivoMono = Chivo_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const shareTechMono = Share_Tech_Mono({ subsets: ['latin'], weight: ['400'], display: 'swap' }); // Note: 700 not available, using 400
+const overpassMono = Overpass_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const ibmPlexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const sourceCodePro = Source_Code_Pro({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const anonymousPro = Anonymous_Pro({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const inconsolata = Inconsolata({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const cousine = Cousine({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const teko = Teko({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const saira = Saira({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const titilliumWeb = Titillium_Web({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const rubik = Rubik({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const oxygenMono = Oxygen_Mono({ subsets: ['latin'], weight: ['400'], display: 'swap' }); // Note: 700 not available, using 400
+const vt323 = VT323({ subsets: ['latin'], weight: ['400'], display: 'swap' }); // Note: 700 not available, using 400
+const pressStart2P = Press_Start_2P({ subsets: ['latin'], weight: ['400'], display: 'swap' }); // Note: 700 not available, using 400
+const audiowide = Audiowide({ subsets: ['latin'], weight: ['400'], display: 'swap' }); // Note: 700 not available, using 400
+const quantico = Quantico({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const electrolize = Electrolize({ subsets: ['latin'], weight: ['400'], display: 'swap' }); // Note: 700 not available, using 400
+const oxanium = Oxanium({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const b612Mono = B612_Mono({ subsets: ['latin'], weight: ['400', '700'], display: 'swap' });
+const majorMonoDisplay = Major_Mono_Display({ subsets: ['latin'], weight: ['400'], display: 'swap' }); // Note: 700 not available, using 400
 
-const fonts = [inter, roboto, poppins, lora, merriweather];
+// Collect fonts into an array for mapping to stock texts
+const fonts = [
+  firaCode,
+  jetBrainsMono,
+  orbitron,
+  rajdhani,
+  spaceMono,
+  exo2,
+  chivoMono,
+  shareTechMono,
+  overpassMono,
+  ibmPlexMono,
+  sourceCodePro,
+  anonymousPro,
+  inconsolata,
+  cousine,
+  teko,
+  saira,
+  titilliumWeb,
+  rubik,
+  oxygenMono,
+  vt323,
+  pressStart2P,
+  audiowide,
+  quantico,
+  electrolize,
+  oxanium,
+  b612Mono,
+  majorMonoDisplay,
+];
 
 // Stock texts for <h3>
 const stockTexts = [
-  'Bridging Academia and Industry in Semiconductor Design.',
-  'Innovating the Future of VLSI Technology.',
-  'Empowering Students in Circuit Design Excellence.',
-  'Connecting Talent with Semiconductor Opportunities.',
-  'Advancing Knowledge in Microelectronics.',
+  'From Ground to Greatness',
+  'Grounding Knowledge, Rising in Innovation',
+  'Where Ground is Zero, Possibilities are Infinite',
+  'Every Circuit Starts Here, Every Innovation Starts Now',
+  'Rooted in Ground, Reaching for Greatness',
+  'From GND_0 to Global Innovation',
+  'Grounding Engineers, Powering the Future',
+  'Zero as a Start, Greatness as a Destination',
+  'Where Ideas Ground, Greatness Grows',
+  'Grounded in Circuits, Soaring in Innovation',
+  'When Ground is Zero, Innovation is Infinite',
+  'When Ground is Zero, Possibilities Take Shape',
+  'When Ground is Zero, Greatness Begins',
+  'When Ground is Zero, Everything is Possible',
+  'When Ground is Zero, Circuits Come Alive',
+  'When Ground is Zero, the Future is Designed',
+  'When Ground is Zero, Excellence Flows',
+  'When Ground is Zero, We Rise Higher',
+  'When Ground is Zero, Innovation Flows',
+  'When Ground is Zero, Ideas Spark',
+  'When Ground is Zero, Circuits Thrive',
+  'When Ground is Zero, Knowledge Flows',
+  'When Ground is Zero, Creativity Flows',
+  'When Ground is Zero, the Future Flows',
+  'When Ground is Zero, Possibilities Multiply',
+  'When Ground is Zero, Everything Connects',
+  'When Ground is Zero, Excellence Begins to Flow',
 ];
 
 interface GlitchTextProps {
@@ -29,7 +108,6 @@ interface GlitchTextProps {
 
 export default function GlitchText({ h1Text }: GlitchTextProps) {
   const [isGlitching, setIsGlitching] = useState(false);
-  const [fontIndex, setFontIndex] = useState(0);
   const [textIndex, setTextIndex] = useState(0);
   const [glitchIntensity, setGlitchIntensity] = useState(1);
 
@@ -42,7 +120,6 @@ export default function GlitchText({ h1Text }: GlitchTextProps) {
       setIsGlitching(true);
       setTimeout(() => {
         setIsGlitching(false);
-        setFontIndex((prev) => (prev + 1) % fonts.length);
         setTextIndex((prev) => (prev + 1) % stockTexts.length);
       }, 1200); // Extended glitch duration for more dramatic effect
     }, 7000); // Slightly faster trigger
@@ -51,7 +128,7 @@ export default function GlitchText({ h1Text }: GlitchTextProps) {
   }, []);
 
   return (
-    <div className={fonts[fontIndex].className}>
+    <div className={fonts[textIndex].className}>
       <h1
         className={`text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight transition-all duration-300 ${
           isGlitching ? `glitch-enhanced glitch-intensity-${glitchIntensity}` : ''

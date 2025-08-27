@@ -15,6 +15,7 @@ export default function Footer() {
     { name: 'Resources', href: '/resources' },
     { name: 'Register', href: '/register' },
     { name: 'About', href: '/about' },
+    { name: 'VLSI PULSE', href: '/vlsiPulse' },
   ];
 
   const socialLinks = [

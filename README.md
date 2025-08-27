@@ -39,6 +39,7 @@ This is a Next.js application integrated with Sanity.io for content management. 
    NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
    NEXT_PUBLIC_SANITY_DATASET=your-dataset
    SANITY_TOKEN=your-sanity-token
+   SANITY_WRITE_TOKEN=your-sanity-token-with-edit-access
    ```
    - Obtain these values from your Sanity dashboard after setting up a project.
 
