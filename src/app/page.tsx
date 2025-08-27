@@ -6,6 +6,7 @@ import Footer from '../components/footer';
 import GlitchText from '../components/GlitchText';
 import { useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
+import { ExternalLink } from "lucide-react";
 import Link from 'next/link';
 
 // Load the custom font from the public directory
@@ -93,9 +94,9 @@ export default function Home() {
                 {hotTopics.map((topic) => (
                   <div key={topic._id} className="embla__slide flex-[0_0_300px] min-w-0">
                     <div className="bg-gray-900 border border-blue-500/30 rounded-xl overflow-hidden shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 p-6">
-                      <Link href="/vlsiPulse" className="block text-xl font-bold text-white hover:text-blue-300 mb-2">
+                      <div className="block text-xl font-bold text-white hover:text-blue-300 mb-2">
                         {topic.title}
-                      </Link>
+                      </div>
                       <div className="flex justify-between items-center text-xs text-gray-400 mt-4">
                         <span>👍 {topic.upvotes || 0}</span>
                         <span>👀 {topic.views || 0}</span>
@@ -105,9 +106,12 @@ export default function Home() {
                 ))}
               </div>
             </div>
+            <div>
+              <Link href="/vlsiPulse" className='flex-1 inline-flex items-center justify-center px-4 py-2 border border-purple-500 text-purple-300 hover:bg-purple-500/20 rounded-md text-sm font-medium transition-colors'>Read Articles <ExternalLink className="w-4 h-4 ml-2" /> </Link>
+            </div>
             <div className="flex justify-center mt-6 space-x-4">
-              <button onClick={() => emblaApi?.scrollPrev()} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Prev</button>
-              <button onClick={() => emblaApi?.scrollNext()} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Next</button>
+              <button onClick={() => emblaApi?.scrollPrev()} className="px-4 py-2 border border-purple-500 text-purple-300 hover:bg-purple-500/20 rounded-md text-sm font-medium transition-colors cursor-pointer">Prev</button>
+              <button onClick={() => emblaApi?.scrollNext()} className="px-4 py-2 border border-purple-500 text-purple-300 hover:bg-purple-500/20 rounded-md text-sm font-medium transition-colors cursor-pointer">Next</button>
             </div>
           </div>
         </main>

@@ -37,7 +37,7 @@ export default function Header() {
               className="text-white text-lg sm:text-xl font-bold tracking-tight matrix-text-header transition-all duration-300"
               data-text="GND_0 VLSI Club"
             >
-              GND_0 VLSI Club
+              GND_0 VLSI CLUB
             </span>
             {/* Matrix rain effect - only visible on hover */}
             <div className="matrix-rain-header"></div>
