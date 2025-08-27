@@ -38,8 +38,15 @@ export async function GET() {
       ...,
       images[] { asset -> { url } }
     }`;
+    const hotTopicsQuery = `*[_type == "hotTopics"] | order(publishDate desc) {
+      ...,
+      imagery[] {
+        ...,
+        image { asset -> { url } }
+      }
+    }`;
 
-    const [resources, hardware, members, faculty, alumni, eventSimple, eventDetailed, upcomingEvents] = await Promise.all([
+    const [resources, hardware, members, faculty, alumni, eventSimple, eventDetailed, upcomingEvents, hotTopics] = await Promise.all([
       fetchWithTimeout(client, resourcesQuery),
       fetchWithTimeout(client, hardwareQuery),
       fetchWithTimeout(client, membersQuery),
@@ -48,9 +55,10 @@ export async function GET() {
       fetchWithTimeout(client, eventSimpleQuery),
       fetchWithTimeout(client, eventDetailedQuery),
       fetchWithTimeout(client, upcomingEventQuery),
+      fetchWithTimeout(client, hotTopicsQuery),
     ]);
 
-    return NextResponse.json({ resources, hardware, members, faculty, alumni, eventSimple, eventDetailed, upcomingEvents });
+    return NextResponse.json({ resources, hardware, members, faculty, alumni, eventSimple, eventDetailed, upcomingEvents, hotTopics });
   } catch (error) {
     console.error('Error in /api/sanity:', error);
     return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });

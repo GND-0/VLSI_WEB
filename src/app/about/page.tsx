@@ -92,7 +92,7 @@ export default function About() {
   const leadership = members
     .filter((member) => ["President", "Secretary", "Treasurer"].includes(member.position))
     .sort((a, b) => {
-      const order: Record<string, number> = { President: 0, Secretary: 1, Treasurer: 2 };
+      const order: Record<string, number> = { President: 1, Secretary: 0, Treasurer: 2 };
       return order[a.position] - order[b.position];
     });
   const clubMembers = members
@@ -157,6 +157,7 @@ export default function About() {
                           position={member.position}
                           imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : "/placeholder.png"}
                           linkedin={member.linkedin}
+                          className={member.position !== "President" ? "mt-25" : ""}
                         />
                       ))}
                     </div>
