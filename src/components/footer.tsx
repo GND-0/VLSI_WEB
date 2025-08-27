@@ -20,7 +20,7 @@ export default function Footer() {
   const socialLinks = [
     { name: 'LinkedIn', href: 'https://www.linkedin.com/company/gnd-0-vlsi-club-iiit-dharwad/', icon: <Linkedin className="h-5 w-5 inline-block mr-2" /> },
     { name: 'GitHub', href: 'https://github.com/GND-0', icon: <Github className="h-5 w-5 inline-block mr-2" /> },
-    { name: 'Instagram', href: 'https://www.instagram.com/divyanshmishra9364/', icon: <Instagram className="h-5 w-5 inline-block mr-2" /> },
+    { name: 'Instagram', href: 'https://www.instagram.com/ground0vlsi.iiitdwd?igsh=ZDk4emQ1Y3F2aGVm', icon: <Instagram className="h-5 w-5 inline-block mr-2" /> },
   ];
 
   return (
