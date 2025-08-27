@@ -15,11 +15,12 @@ interface MemberCardProps {
   position: string;
   imageSrc: string;
   linkedin: string;
+  className?: string; // Add className as an optional prop
 }
 
-export default function MemberCard({ name, position, imageSrc, linkedin }: MemberCardProps) {
+export default function MemberCard({ name, position, imageSrc, linkedin, className }: MemberCardProps) {
   return (
-    <div className={`flex flex-col items-center text-center p-4 bg-black/40 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${inter.className}`}>
+    <div className={`flex flex-col items-center text-center p-4 bg-black/40 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${inter.className} ${className || ""}`}>
       <div className="relative group overflow-hidden">
         <Image
           src={imageSrc || "/placeholder.png"}
