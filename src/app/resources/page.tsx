@@ -141,7 +141,7 @@ export default function Resources() {
           backgroundPosition: 'top left',
         }}
       >
-        <main className="z-10 max-w-7xl mx-auto w-full">
+        <main className="z-10 max-w-7xl mx-auto w-full mt-20">
           {/* Resources Section */}
           <section className="py-8 sm:py-12">
             <h2 className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8">VLSI Resources</h2>
