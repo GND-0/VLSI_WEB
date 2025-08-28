@@ -1,4 +1,3 @@
-// src/app/resources/page.tsx
 "use client";
 
 import { Inter } from 'next/font/google';
@@ -16,65 +15,68 @@ const inter = Inter({
 // Skeleton Loader Component
 function SkeletonCard() {
   return (
-    <div className="bg-black/50 backdrop-blur-sm p-6 rounded-lg animate-pulse">
-      <div className="h-48 w-full bg-gray-800 rounded-lg mb-4"></div>
-      <div className="h-6 bg-gray-800 rounded w-3/4 mb-2"></div>
-      <div className="h-4 bg-gray-800 rounded w-full"></div>
+    <div className="bg-black/50 backdrop-blur-sm p-4 rounded-lg animate-pulse">
+      <div className="h-40 w-full bg-gray-800 rounded-lg mb-3"></div>
+      <div className="h-5 bg-gray-800 rounded w-3/4 mb-2"></div>
+      <div className="h-3 bg-gray-800 rounded w-full"></div>
     </div>
   );
 }
 
-// Hardware Card Component (Improved with better hover, shadow)
+// Hardware Card Component
 function HardwareCard({ item, onClick }: { item: Hardware; onClick: () => void }) {
   return (
     <div
-      className="relative flex flex-col items-center text-center cursor-pointer bg-black/60 backdrop-blur-md p-6 rounded-xl shadow-lg hover:bg-black/80 hover:shadow-xl transition-all duration-300"
+      className="relative flex flex-col items-center text-center cursor-pointer bg-black/60 backdrop-blur-md p-4 rounded-xl shadow-md hover:bg-black/80 hover:shadow-lg transition-all duration-300 active:bg-black/80"
       onClick={onClick}
     >
-      <div className="relative">
+      <div className="relative w-full aspect-square max-w-[150px] sm:max-w-[192px]">
         <Image
-          src={item.image?.asset?.url || '/placeholder.png'} // Fallback image
+          src={item.image?.asset?.url || '/placeholder.png'}
           alt={item.name}
-          width={192}
-          height={192}
-          className="h-48 w-48 object-cover rounded-lg"
+          fill
+          className="object-cover rounded-lg"
+          sizes="(max-width: 640px) 150px, 192px"
         />
-        <span className="absolute top-2 right-2 bg-black/100 text-white px-3 py-1 rounded-full text-sm font-bold">
+        <span className="absolute top-1 right-1 bg-black/90 text-white px-2 py-1 rounded-full text-xs font-bold">
           x {item.count ?? 0}
         </span>
       </div>
-      <h3 className="mt-4 text-xl font-semibold text-white">{item.name}</h3>
-      <p className="text-gray-400 text-sm mt-2 line-clamp-2">{item.shortDescription}</p>
+      <h3 className="mt-3 text-lg sm:text-xl font-semibold text-white">{item.name}</h3>
+      <p className="text-gray-400 text-xs sm:text-sm mt-2 line-clamp-2">{item.shortDescription}</p>
     </div>
   );
 }
 
-// Drawer Component (Improved with fade-in, better close button, list styling)
+// Drawer Component
 function Drawer({ isOpen, onClose, item }: { isOpen: boolean; onClose: () => void; item: Hardware | null }) {
   if (!isOpen || !item) return null;
 
   return (
     <div className="fixed inset-0 bg-black/70 z-40 flex justify-end transition-opacity duration-300">
-      <div className="h-full w-full max-w-md bg-black/90 backdrop-blur-lg p-8 overflow-y-auto shadow-2xl animate-slide-in">
-        <button className="absolute top-4 right-4 text-white hover:text-gray-300" onClick={onClose}>
+      <div className="h-full w-full sm:max-w-md bg-black/90 backdrop-blur-lg p-6 sm:p-8 overflow-y-auto shadow-2xl animate-slide-in">
+        <button
+          className="absolute top-4 right-4 text-white hover:text-gray-300 text-lg sm:text-xl p-2"
+          onClick={onClose}
+        >
           ✕
         </button>
-        <h2 className="text-3xl font-bold text-white mb-4">{item.name}</h2>
-        <p className="text-gray-300 mb-6">{item.fullDescription}</p>
-        <h3 className="text-xl font-semibold text-white mb-4">Learn More</h3>
+        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">{item.name}</h2>
+        <p className="text-gray-300 text-sm sm:text-base mb-6">{item.fullDescription}</p>
+        <h3 className="text-lg sm:text-xl font-semibold text-white mb-4">Learn More</h3>
         <ul className="space-y-3">
           {item.links?.map((link, index) => (
             <li key={index}>
               <a
                 href={link.url}
-                className="text-blue-400 hover:text-blue-200 flex items-center gap-2"
+                className="text-blue-400 hover:text-blue-200 flex items-center gap-2 text-sm sm:text-base"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {link.title}
               </a>
             </li>
-          )) ?? <p className="text-gray-400">No links available.</p>}
+          )) ?? <p className="text-gray-400 text-sm sm:text-base">No links available.</p>}
         </ul>
       </div>
     </div>
@@ -131,7 +133,7 @@ export default function Resources() {
     <div className={`flex flex-col min-h-screen bg-black text-white ${inter.className}`}>
       <Header />
       <div
-        className="relative flex flex-col flex-grow p-4 md:p-8"
+        className="relative flex flex-col flex-grow p-4 sm:p-8"
         style={{
           backgroundImage: "url('/image.png')",
           backgroundSize: 'auto',
@@ -141,32 +143,35 @@ export default function Resources() {
       >
         <main className="z-10 max-w-7xl mx-auto w-full">
           {/* Resources Section */}
-          <section className="py-12">
-            <h2 className="text-4xl font-bold text-center mb-8">VLSI Resources</h2>
-            <p className="text-gray-400 text-center mb-12 max-w-3xl mx-auto">
+          <section className="py-8 sm:py-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8">VLSI Resources</h2>
+            <p className="text-gray-400 text-center mb-8 sm:mb-12 text-sm sm:text-base max-w-3xl mx-auto">
               Explore curated resources on VLSI design, categorized for easy navigation. From foundational books to advanced tutorials, these materials are selected to bridge theoretical knowledge with practical application in semiconductor design.
             </p>
             {error ? (
-              <p className="text-red-400 text-center">{error}</p>
+              <p className="text-red-400 text-center text-sm sm:text-base">{error}</p>
             ) : loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : resources.length > 0 ? (
               Array.from(new Set(resources.map((r) => r.category))).map((category) => (
-                <div key={category} className="mb-12">
-                  <h3 className="text-2xl font-semibold mb-6">{category}</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div key={category} className="mb-8 sm:mb-12">
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">{category}</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {resources
                       .filter((item) => item.category === category)
                       .map((item, index) => (
-                        <div key={index} className="bg-black/60 backdrop-blur-md p-6 rounded-xl shadow-lg hover:bg-black/80 hover:shadow-xl transition-all duration-300">
-                          <h4 className="text-lg font-bold mb-2">{item.title}</h4>
-                          <p className="text-gray-500 text-sm mb-2">{item.type}</p>
-                          <p className="text-gray-400 mb-4 line-clamp-3">{item.description}</p>
+                        <div
+                          key={index}
+                          className="bg-black/60 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-md hover:bg-black/80 hover:shadow-lg transition-all duration-300"
+                        >
+                          <h4 className="text-base sm:text-lg font-bold mb-2">{item.title}</h4>
+                          <p className="text-gray-500 text-xs sm:text-sm mb-2">{item.type}</p>
+                          <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-3">{item.description}</p>
                           <a
                             href={item.file?.asset?.url || '#'}
-                            className="text-blue-400 hover:text-blue-200 text-sm"
+                            className="text-blue-400 hover:text-blue-200 text-xs sm:text-sm"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -178,30 +183,30 @@ export default function Resources() {
                 </div>
               ))
             ) : (
-              <p className="text-center">No resources available.</p>
+              <p className="text-center text-sm sm:text-base">No resources available.</p>
             )}
           </section>
 
           {/* Hardware Section */}
-          <section className="py-12">
-            <h2 className="text-4xl font-bold text-center mb-8">Hardware Component Availability</h2>
-            <p className="text-gray-400 text-center mb-12">
+          <section className="py-8 sm:py-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8">Hardware Component Availability</h2>
+            <p className="text-gray-400 text-center mb-8 sm:mb-12 text-sm sm:text-base">
               This information involves the list and the number of hardware components available with the club as of 11:05 PM IST on Thursday, August 21, 2025.
             </p>
             {error ? (
-              <p className="text-red-400 text-center">{error}</p>
+              <p className="text-red-400 text-center text-sm sm:text-base">{error}</p>
             ) : loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : hardware.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {hardware.map((item, index) => (
                   <HardwareCard key={index} item={item} onClick={() => setSelectedHardware(item)} />
                 ))}
               </div>
             ) : (
-              <p className="text-center">No hardware components available.</p>
+              <p className="text-center text-sm sm:text-base">No hardware components available.</p>
             )}
           </section>
         </main>
