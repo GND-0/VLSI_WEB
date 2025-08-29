@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 
 const customFont = localFont({
   src: 'f1.ttf',
@@ -11,6 +12,7 @@ const customFont = localFont({
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { logout } = useAuth();
 
   const navItems = [
     { name: 'Home', href: '/' },
@@ -55,6 +57,8 @@ export default function Header() {
               </Link>
             ))}
           </nav>
+
+          <button onClick={logout} className="bg-red-500 text-white p-2 rounded">Logout</button>
 
           {/* Mobile Menu Button */}
           <button
