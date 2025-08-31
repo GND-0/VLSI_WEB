@@ -142,7 +142,7 @@ export default function About() {
     <div className={`flex flex-col min-h-screen bg-black ${inter.className}`}>
       <Header />
       <div
-        className="relative flex flex-col flex-grow p-4 sm:p-8"
+        className="relative flex flex-col flex-grow p-4 sm:p-8 mt-15"
         style={{
           backgroundImage: "url('/image.png')",
           backgroundSize: "cover",
