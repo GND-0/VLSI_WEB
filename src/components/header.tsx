@@ -1,3 +1,4 @@
+// src/components/header.tsx
 "use client";
 import localFont from 'next/font/local';
 import Link from 'next/link';
@@ -12,7 +13,7 @@ const customFont = localFont({
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const navItems = [
     { name: 'Home', href: '/' },
@@ -46,7 +47,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -56,9 +57,21 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+            {user ? (
+              <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors">
+                Logout
+              </button>
+            ) : (
+              <div className="flex space-x-4">
+                <Link href="/login" className="text-white hover:text-gray-300 text-base font-medium transition-colors">
+                  Login
+                </Link>
+                <Link href="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </nav>
-
-          <button onClick={logout} className="bg-red-500 text-white p-2 rounded">Logout</button>
 
           {/* Mobile Menu Button */}
           <button
@@ -78,7 +91,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden flex flex-col space-y-2 px-4 pb-4">
+          <nav className="md:hidden flex flex-col space-y-4 px-4 pb-4">
             {navItems.map((item) => (
               <Link
                 key={item.name}
@@ -89,6 +102,31 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+            {user ? (
+              <button 
+                onClick={() => { logout(); setIsMenuOpen(false); }} 
+                className="text-red-500 hover:text-red-400 text-base font-medium transition-colors text-left"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link 
+                  href="/login" 
+                  className="text-white hover:text-gray-300 text-base font-medium transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link 
+                  href="/signup" 
+                  className="text-white hover:text-gray-300 text-base font-medium transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </nav>
         )}
       </div>
