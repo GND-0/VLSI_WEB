@@ -120,7 +120,7 @@ function TopicPopup({
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="bg-black/95 backdrop-blur-xl text-white w-[95vw] h-[90vh] max-w-[95vw] !max-w-[95vw] p-6 rounded-2xl border-2 border-gray-700 shadow-2xl overflow-hidden">
-        <DialogHeader className="p-6 pb-4 border-b border-gray-800 sticky top-0 bg-black/95 z-10">
+        <DialogHeader className="p-8 pb-4 border-b border-gray-800 sticky top-0 bg-black/95 z-10 md:w-[1000px]">
           <DialogTitle className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
             {topic.title}
           </DialogTitle>
@@ -179,10 +179,16 @@ function TopicPopup({
             </div>
             <Button
               variant="ghost"
-              className={`flex items-center gap-3 text-lg ${isUpvoted ? 'text-green-400' : 'text-gray-300 hover:text-blue-400 cursor-pointer'}`}
+              className={`flex items-center gap-3 text-lg ${
+                isUpvoted
+                  ? "text-green-400"
+                  : "text-gray-300 hover:text-blue-400 cursor-pointer"
+              }`}
               onClick={() => onUpvote(topic)}
             >
-              <ThumbsUp className={`w-6 h-6 ${isUpvoted ? 'fill-green-400' : ''}`} />
+              <ThumbsUp
+                className={`w-6 h-6 ${isUpvoted ? "fill-green-400" : ""}`}
+              />
               {topic.upvotes ?? 0} Upvotes
             </Button>
           </div>
@@ -320,7 +326,7 @@ export default function VLSIPulse() {
         topic={selectedTopic}
         onClose={() => setSelectedTopic(null)}
         onUpvote={handleUpvote}
-        isUpvoted={upvotedTopics.has(selectedTopic?._id || '')}
+        isUpvoted={upvotedTopics.has(selectedTopic?._id || "")}
       />
     </div>
   );
