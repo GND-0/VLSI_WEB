@@ -649,3 +649,28 @@
 .react-resizable-handle:hover {
   background-color: rgba(147, 51, 234, 0.3) !important;
 }
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 8s infinite ease-in-out;
+}
+
+/* Matrix rain simulation using background */
+@keyframes matrix-rain {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+.animate-matrix-rain {
+  animation: matrix-rain 20s linear infinite;
+}
