@@ -2,13 +2,13 @@
 "use client";
 
 import { useState } from "react";
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { auth, db } from "../../../lib/firebase";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import GoogleAuthButton from "../../components/GoogleAuthButton";
 import Link from "next/link";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { createOrUpdateUserDoc } from "../../../lib/userUtils";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -17,27 +17,27 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const createOrUpdateUserDoc = async (user: any) => {
-    const userDocRef = doc(db, "users", user.uid);
-    const userDoc = await getDoc(userDocRef);
-    if (!userDoc.exists()) {
-      await setDoc(userDocRef, {
-        email: user.email,
-        role: "client",
-        createdAt: new Date().toISOString(),
-      });
-    }
+  const isValidDomain = (email: string) => {
+    return email.endsWith('@iiitdwd.ac.in');
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
+
+    if (!isValidDomain(email)) {
+      setError("Please use your college email (@iiitdwd.ac.in)");
+      setLoading(false);
+      return;
+    }
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       await createOrUpdateUserDoc(userCredential.user);
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Failed to log in. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -45,13 +45,20 @@ export default function Login() {
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
+    setError("");
     const provider = new GoogleAuthProvider();
+    provider.addScope("profile email");
     try {
       const userCredential = await signInWithPopup(auth, provider);
+      if (!isValidDomain(userCredential.user.email || '')) {
+        await signOut(auth);
+        setError("Please use your college email (@iiitdwd.ac.in)");
+        return;
+      }
       await createOrUpdateUserDoc(userCredential.user);
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Failed to sign in with Google. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -105,7 +112,7 @@ export default function Login() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email Address"
+            placeholder="College Mail ID (e.g., username@iiitdwd.ac.in)"
             className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
             required
           />

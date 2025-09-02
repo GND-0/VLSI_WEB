@@ -2,42 +2,67 @@
 "use client";
 
 import { useState } from "react";
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { auth, db } from "../../../lib/firebase";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import GoogleAuthButton from "../../components/GoogleAuthButton";
 import Link from "next/link";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { createOrUpdateUserDoc } from "../../../lib/userUtils";
 
 export default function SignUp() {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const createOrUpdateUserDoc = async (user: any) => {
-    const userDocRef = doc(db, "users", user.uid);
-    const userDoc = await getDoc(userDocRef);
-    if (!userDoc.exists()) {
-      await setDoc(userDocRef, {
-        email: user.email,
-        role: "client",
-        createdAt: new Date().toISOString(),
-      });
-    }
+  const validatePassword = (pwd: string) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(pwd);
+  };
+
+  const isValidDomain = (email: string) => {
+    return email.endsWith('@iiitdwd.ac.in');
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
+
+    if (!fullName.trim()) {
+      setError("Full Name is required");
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidDomain(email)) {
+      setError("Please use your college email (@iiitdwd.ac.in)");
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setError("Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one digit, and one special character.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      await createOrUpdateUserDoc(userCredential.user);
+      await createOrUpdateUserDoc(userCredential.user, { name: fullName });
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Failed to sign up. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -45,13 +70,20 @@ export default function SignUp() {
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
+    setError("");
     const provider = new GoogleAuthProvider();
+    provider.addScope("profile email");
     try {
       const userCredential = await signInWithPopup(auth, provider);
-      await createOrUpdateUserDoc(userCredential.user);
+      if (!isValidDomain(userCredential.user.email || '')) {
+        await signOut(auth);
+        setError("Please use your college email (@iiitdwd.ac.in)");
+        return;
+      }
+      await createOrUpdateUserDoc(userCredential.user, { name: userCredential.user.displayName || '' });
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Failed to sign up with Google. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -102,10 +134,10 @@ export default function SignUp() {
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email Address"
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Full Name"
             className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
             required
           />
@@ -113,6 +145,17 @@ export default function SignUp() {
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="College Mail ID (e.g., username@iiitdwd.ac.in)"
+            className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            required
+          />
+          <motion.input
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -120,10 +163,29 @@ export default function SignUp() {
             className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
             required
           />
+          <motion.input
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
+            className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            required
+          />
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.65 }}
+            className="text-xs text-gray-400 mt-[-1rem] mb-2"
+          >
+            Password must be 8+ characters, with uppercase, lowercase, digit, and special character.
+          </motion.p>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.7 }}
             className="flex items-center text-sm text-gray-300"
           >
             <input type="checkbox" required className="mr-2 accent-indigo-500" />
@@ -132,7 +194,7 @@ export default function SignUp() {
           <motion.button
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.8 }}
             type="submit"
             disabled={loading}
             className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-50 shadow-lg"
@@ -143,7 +205,7 @@ export default function SignUp() {
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 0.9 }}
           className="mt-6"
         >
           <GoogleAuthButton onClick={handleGoogleSignIn} disabled={loading} />
@@ -151,7 +213,7 @@ export default function SignUp() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: 1.0 }}
           className="mt-4 text-center text-sm text-gray-300"
         >
           Already have an account? <Link href="/login" className="text-indigo-400 hover:text-indigo-300">Log In</Link>
