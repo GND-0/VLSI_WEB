@@ -3,6 +3,7 @@
 import { useAuth } from '../../../contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { Analytics } from "@vercel/analytics/next"
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
@@ -16,5 +17,10 @@ export default function Dashboard() {
 
   if (loading) return <p>Loading...</p>;
 
-  return <div>Welcome, {user?.email}! Manage your events here.</div>;
+  return (
+    <div>
+      <div>Welcome, {user?.email}! Manage your events here.</div>
+      <Analytics />
+    </div>
+  );
 }

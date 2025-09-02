@@ -1,4 +1,3 @@
-// src/app/signup/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -95,13 +94,13 @@ export default function SignUp() {
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black opacity-80"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(79,70,229,0.1)_0%,transparent_50%)] animate-pulse-slow"></div>
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGgyMFYyMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMCAwVjIwbTAgMEwxMC4xIDBIMTBtMCAwTDEwIDAuMVYweiIgc3Ryb2tlPSIjNEYzNkU5IiBzdHJva2Utb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-5 animate-matrix-rain"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGgyMFYyMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMCAwVjIwbTAgMEwxMC4xIDBIMTBtMCAwTDEwIDAuMVYweiIgc3Ryb2tlPSIjNEYzNkU5IiBzdHJva2Utb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] opacity-5 animate-matrix-rain "></div>
       </div>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="bg-white/5 backdrop-blur-xl p-10 rounded-2xl shadow-2xl w-full max-w-md border border-white/10 relative z-10"
+        className="bg-white/5 backdrop-blur-xl p-10 rounded-2xl shadow-2xl w-full max-w-md border border-white/10 relative z-10  mt-15"
       >
         <motion.h2
           initial={{ y: -20, opacity: 0 }}
