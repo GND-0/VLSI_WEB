@@ -1,28 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../../lib/firebase";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import GoogleAuthButton from "../../components/GoogleAuthButton";
 import Link from "next/link";
-import { createOrUpdateUserDoc } from "../../../lib/userUtils";
-import { Eye, EyeOff } from "lucide-react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../../lib/firebase";
 
-export default function Login() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginAttempts, setLoginAttempts] = useState(0);
   const router = useRouter();
 
   // Session management
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && isValidDomain(user.email || '')) {
+      if (user && isValidDomain(user.email || '') && user.emailVerified) {
         router.push("/dashboard");
       }
     });
@@ -33,33 +28,14 @@ export default function Login() {
     return email.endsWith('@iiitdwd.ac.in');
   };
 
-  const getFriendlyErrorMessage = (errorCode: string) => {
-    switch (errorCode) {
-      case 'auth/invalid-credential':
-        return 'Invalid email or password. Please try again.';
-      case 'auth/user-disabled':
-        return 'This account has been disabled. Contact support.';
-      case 'auth/too-many-requests':
-        return 'Too many attempts. Please try again later.';
-      default:
-        return 'An error occurred. Please try again.';
-    }
-  };
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setLoading(true);
 
     if (!navigator.onLine) {
       setError("No internet connection. Please check your network and try again.");
-      setLoading(false);
-      return;
-    }
-
-    if (loginAttempts >= 5) {
-      setError("Too many attempts. Please wait 1 minute before trying again.");
-      setTimeout(() => setLoginAttempts(0), 60000);
       setLoading(false);
       return;
     }
@@ -67,60 +43,23 @@ export default function Login() {
     if (!isValidDomain(email)) {
       setError("Please use your college email (@iiitdwd.ac.in)");
       setLoading(false);
-      setLoginAttempts(loginAttempts + 1);
       return;
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      if (!userCredential.user.emailVerified) {
-        setError("Please verify your email before logging in.");
-        await signOut(auth);
-        setLoading(false);
-        return;
+      const response = await fetch('/api/send-reset-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        setSuccess(result.message);
+      } else {
+        setError(result.message);
       }
-      await createOrUpdateUserDoc(userCredential.user);
-      router.push("/dashboard");
     } catch (err: any) {
-      setLoginAttempts(loginAttempts + 1);
-      setError(getFriendlyErrorMessage(err.code || err.message));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    setError("");
-
-    if (!navigator.onLine) {
-      setError("No internet connection. Please check your network and try again.");
-      setLoading(false);
-      return;
-    }
-
-    const provider = new GoogleAuthProvider();
-    provider.addScope("profile email");
-    provider.setCustomParameters({ prompt: "select_account" });
-
-    try {
-      const userCredential = await signInWithPopup(auth, provider);
-      if (!isValidDomain(userCredential.user.email || '')) {
-        await signOut(auth);
-        setError("Please use your college email (@iiitdwd.ac.in)");
-        setLoading(false);
-        return;
-      }
-      if (!userCredential.user.emailVerified) {
-        setError("Please verify your email before logging in.");
-        await signOut(auth);
-        setLoading(false);
-        return;
-      }
-      await createOrUpdateUserDoc(userCredential.user);
-      router.push("/dashboard");
-    } catch (err: any) {
-      setError(getFriendlyErrorMessage(err.code || err.message));
+      setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -174,16 +113,16 @@ export default function Login() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="bg-white/5 backdrop-blur-xl p-10 rounded-2xl shadow-2xl w-full max-w-md border border-white/10 relative z-10"
         role="dialog"
-        aria-labelledby="login-title"
+        aria-labelledby="forgot-password-title"
       >
         <motion.h2
-          id="login-title"
+          id="forgot-password-title"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
           className="text-4xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500"
         >
-          Welcome Back
+          Reset Password
         </motion.h2>
         {error && (
           <motion.p
@@ -191,9 +130,20 @@ export default function Login() {
             animate={{ opacity: 1 }}
             className="text-red-400 text-center mb-4"
             role="alert"
-            id="login-error"
+            id="reset-error"
           >
             {error}
+          </motion.p>
+        )}
+        {success && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-green-400 text-center mb-4"
+            role="status"
+            id="reset-success"
+          >
+            {success}
           </motion.p>
         )}
         {loading && (
@@ -206,7 +156,7 @@ export default function Login() {
             />
           </div>
         )}
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handlePasswordReset} className="space-y-6">
           <motion.div
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -220,59 +170,29 @@ export default function Login() {
               placeholder="College Mail ID (e.g., username@iiitdwd.ac.in)"
               className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
               required
-              aria-describedby={error ? "login-error" : undefined}
+              aria-describedby={error ? "reset-error" : success ? "reset-success" : undefined}
             />
-          </motion.div>
-          <motion.div
-            initial={{ x: 20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="relative"
-          >
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-              required
-              aria-describedby={error ? "login-error" : undefined}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-indigo-400 transition-colors"
-              aria-label={showPassword ? "Hide password" : "Show password"}
-            >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-            </button>
           </motion.div>
           <motion.button
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.4 }}
             type="submit"
             disabled={loading}
             className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-50 shadow-lg"
           >
-            Log In
+            Send Reset Email
           </motion.button>
         </form>
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mt-6"
-        >
-          <GoogleAuthButton onClick={handleGoogleSignIn} disabled={loading} />
-        </motion.div>
-        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
+          transition={{ delay: 0.5 }}
           className="mt-4 text-center text-sm text-gray-300 space-y-2"
         >
-          <Link href="/forgot-password" className="block hover:text-indigo-400 transition-colors">Forgot Password?</Link>
+          <p>
+            Remember your password? <Link href="/login" className="text-indigo-400 hover:text-indigo-300">Log In</Link>
+          </p>
           <p>
             Not a member? <Link href="/signup" className="text-indigo-400 hover:text-indigo-300">Sign Up</Link>
           </p>
