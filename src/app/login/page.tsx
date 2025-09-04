@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { useState, useEffect } from "react";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../../lib/firebase";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -16,10 +16,34 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loginAttempts, setLoginAttempts] = useState(0);
   const router = useRouter();
+
+  // Session management
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && isValidDomain(user.email || '')) {
+        router.push("/dashboard");
+      }
+    });
+    return () => unsubscribe();
+  }, [router]);
 
   const isValidDomain = (email: string) => {
     return email.endsWith('@iiitdwd.ac.in');
+  };
+
+  const getFriendlyErrorMessage = (errorCode: string) => {
+    switch (errorCode) {
+      case 'auth/invalid-credential':
+        return 'Invalid email or password. Please try again.';
+      case 'auth/user-disabled':
+        return 'This account has been disabled. Contact support.';
+      case 'auth/too-many-requests':
+        return 'Too many attempts. Please try again later.';
+      default:
+        return 'An error occurred. Please try again.';
+    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -27,18 +51,39 @@ export default function Login() {
     setError("");
     setLoading(true);
 
+    if (!navigator.onLine) {
+      setError("No internet connection. Please check your network and try again.");
+      setLoading(false);
+      return;
+    }
+
+    if (loginAttempts >= 5) {
+      setError("Too many attempts. Please wait 1 minute before trying again.");
+      setTimeout(() => setLoginAttempts(0), 60000);
+      setLoading(false);
+      return;
+    }
+
     if (!isValidDomain(email)) {
       setError("Please use your college email (@iiitdwd.ac.in)");
       setLoading(false);
+      setLoginAttempts(loginAttempts + 1);
       return;
     }
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      if (!userCredential.user.emailVerified) {
+        setError("Please verify your email before logging in.");
+        await signOut(auth);
+        setLoading(false);
+        return;
+      }
       await createOrUpdateUserDoc(userCredential.user);
-      router.push("/");
+      router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message || "Failed to log in. Please check your credentials.");
+      setLoginAttempts(loginAttempts + 1);
+      setError(getFriendlyErrorMessage(err.code || err.message));
     } finally {
       setLoading(false);
     }
@@ -47,19 +92,35 @@ export default function Login() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setError("");
+
+    if (!navigator.onLine) {
+      setError("No internet connection. Please check your network and try again.");
+      setLoading(false);
+      return;
+    }
+
     const provider = new GoogleAuthProvider();
     provider.addScope("profile email");
+    provider.setCustomParameters({ prompt: "select_account" });
+
     try {
       const userCredential = await signInWithPopup(auth, provider);
       if (!isValidDomain(userCredential.user.email || '')) {
         await signOut(auth);
         setError("Please use your college email (@iiitdwd.ac.in)");
+        setLoading(false);
+        return;
+      }
+      if (!userCredential.user.emailVerified) {
+        setError("Please verify your email before logging in.");
+        await signOut(auth);
+        setLoading(false);
         return;
       }
       await createOrUpdateUserDoc(userCredential.user);
-      router.push("/");
+      router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message || "Failed to sign in with Google. Please try again.");
+      setError(getFriendlyErrorMessage(err.code || err.message));
     } finally {
       setLoading(false);
     }
@@ -78,13 +139,14 @@ export default function Login() {
         className="absolute inset-0"
         style={{
           background: "radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.2), transparent 50%)",
+          willChange: "transform, opacity",
         }}
         animate={{
-          scale: [1, 1.05, 1],
-          opacity: [0.2, 0.3, 0.2],
+          scale: [1, 1.03, 1],
+          opacity: [0.2, 0.25, 0.2],
         }}
         transition={{
-          duration: 4,
+          duration: 5,
           repeat: Infinity,
           repeatType: "reverse",
           ease: "easeInOut",
@@ -95,12 +157,13 @@ export default function Login() {
         style={{
           backgroundImage: `url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGgyMFYyMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMCAwVjIwbTAgMEwxMC4xIDBIMTBtMCAwTDEwIDAuMVYweiIgc3Ryb2tlPSIjNEYzNkU5IiBzdHJva2Utb3BhY2l0eT0iMC4xIi8+PC9zdmc+")`,
           opacity: 0.05,
+          willChange: "transform",
         }}
         animate={{
-          y: ["0%", "-100%"],
+          y: ["0%", "-50%"],
         }}
         transition={{
-          duration: 20,
+          duration: 15,
           repeat: Infinity,
           ease: "linear",
         }}
@@ -110,8 +173,11 @@ export default function Login() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="bg-white/5 backdrop-blur-xl p-10 rounded-2xl shadow-2xl w-full max-w-md border border-white/10 relative z-10"
+        role="dialog"
+        aria-labelledby="login-title"
       >
         <motion.h2
+          id="login-title"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -124,6 +190,8 @@ export default function Login() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="text-red-400 text-center mb-4"
+            role="alert"
+            id="login-error"
           >
             {error}
           </motion.p>
@@ -134,6 +202,7 @@ export default function Login() {
               className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              aria-label="Loading"
             />
           </div>
         )}
@@ -151,6 +220,7 @@ export default function Login() {
               placeholder="College Mail ID (e.g., username@iiitdwd.ac.in)"
               className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
               required
+              aria-describedby={error ? "login-error" : undefined}
             />
           </motion.div>
           <motion.div
@@ -166,17 +236,15 @@ export default function Login() {
               placeholder="Password"
               className="w-full p-4 border border-white/20 rounded-lg bg-white/5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
               required
+              aria-describedby={error ? "login-error" : undefined}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-indigo-400 transition-colors"
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </motion.div>
           <motion.button
