@@ -59,16 +59,11 @@ export default function ForgotPassword() {
         body: JSON.stringify({ email }),
       });
 
-      if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.message || 'Failed to send reset email.');
-      }
-
       const result = await response.json();
-      if (result.success) {
+      if (response.ok && result.success) {
         setSuccess(result.message);
       } else {
-        setError(result.message);
+        throw new Error(result.message || 'Failed to send reset email.');
       }
     } catch (err: any) {
       setError(err.message || "An error occurred. Please try again.");
@@ -106,7 +101,7 @@ export default function ForgotPassword() {
       <motion.div
         className="absolute inset-0 overflow-hidden"
         style={{
-          backgroundImage: `url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGgyMFYyMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMCAwVjIwbTAgMEwxMC4xIDBIMTBtMCAwTDEwIDAuMVYweiIgc3Ryb2tlPSIjNEYzNkU5IiBzdHJva2Utb3BhY2l0eT0iMC4xIi8+PC9zdmc+")`,
+          backgroundImage: `url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMGgyMFYyMEgzeiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMCAwVjIwbTAgMEwxMC4xIDBIMTBtMCAwTDEwIDAuMVYzeiIgc3Ryb2tlPSIjNEYzNkU5IiBzdHJva2Utb3BhY2l0eT0iMC4xIi8+PC9zdmc+")`,
           opacity: 0.05,
           willChange: "transform",
         }}
