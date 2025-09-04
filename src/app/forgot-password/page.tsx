@@ -40,6 +40,12 @@ export default function ForgotPassword() {
       return;
     }
 
+    if (!email.trim()) {
+      setError("Email is required.");
+      setLoading(false);
+      return;
+    }
+
     if (!isValidDomain(email)) {
       setError("Please use your college email (@iiitdwd.ac.in)");
       setLoading(false);
@@ -52,6 +58,12 @@ export default function ForgotPassword() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
+
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.message || 'Failed to send reset email.');
+      }
+
       const result = await response.json();
       if (result.success) {
         setSuccess(result.message);
@@ -59,7 +71,7 @@ export default function ForgotPassword() {
         setError(result.message);
       }
     } catch (err: any) {
-      setError("An error occurred. Please try again.");
+      setError(err.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -178,7 +190,7 @@ export default function ForgotPassword() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
             type="submit"
-            disabled={loading}
+            disabled={loading || !email.trim()}
             className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-50 shadow-lg"
           >
             Send Reset Email
