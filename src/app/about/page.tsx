@@ -313,7 +313,7 @@ export default function About() {
           {/* View Club Projects Button */}
           <div className="py-8 sm:py-12 flex justify-center">
             <Link
-              href="/projects"
+              href="/club-projects"
               className="relative text-white text-base sm:text-lg font-bold tracking-tight matrix-text-header transition-all duration-300 px-4 sm:px-6 py-2 sm:py-3 bg-blue-500 hover:bg-blue-600 rounded-full matrix-container-header"
             >
               <span>View Club Projects</span>
