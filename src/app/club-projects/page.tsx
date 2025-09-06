@@ -79,19 +79,157 @@ export default function ClubProjectsPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-          className="w-16 h-16 border-4 border-t-4 border-purple-500 rounded-full border-solid border-t-transparent"
-        ></motion.div>
+      <div className="flex justify-center items-center h-screen bg-gray-950 text-white">
+        <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            {/* Gradient definitions with purple shades */}
+            <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{ stopColor: '#7e22ce', stopOpacity: 1 }} /> {/* Purple-dark */}
+              <stop offset="100%" style={{ stopColor: '#c084fc', stopOpacity: 1 }} /> {/* Purple-light */}
+            </linearGradient>
+            
+            <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style={{ stopColor: '#7e22ce', stopOpacity: 0.3 }} />
+              <stop offset="50%" style={{ stopColor: '#c084fc', stopOpacity: 0.8 }} />
+              <stop offset="100%" style={{ stopColor: '#7e22ce', stopOpacity: 0.3 }} />
+            </linearGradient>
+
+            <radialGradient id="pulseGradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style={{ stopColor: '#7e22ce', stopOpacity: 0.6 }} />
+              <stop offset="100%" style={{ stopColor: '#7e22ce', stopOpacity: 0 }} />
+            </radialGradient>
+          </defs>
+
+          {/* Background circle with pulse effect */}
+          <circle cx="100" cy="100" r="80" fill="url(#pulseGradient)">
+            <animate attributeName="r" values="60;90;60" dur="2s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" repeatCount="indefinite" />
+          </circle>
+
+          {/* Neural network connections */}
+          <g stroke="url(#connectionGradient)" strokeWidth="2" fill="none" opacity="0.6">
+            {/* Main connecting lines */}
+            <line x1="70" y1="70" x2="130" y2="130">
+              <animate attributeName="stroke-dasharray" values="0 100;50 50;100 0;50 50;0 100" dur="3s" repeatCount="indefinite" />
+            </line>
+            <line x1="130" y1="70" x2="70" y2="130">
+              <animate attributeName="stroke-dasharray" values="50 50;100 0;50 50;0 100;50 50" dur="3s" repeatCount="indefinite" />
+            </line>
+            <line x1="100" y1="50" x2="100" y2="150">
+              <animate attributeName="stroke-dasharray" values="25 75;75 25;25 75" dur="2.5s" repeatCount="indefinite" />
+            </line>
+            <line x1="50" y1="100" x2="150" y2="100">
+              <animate attributeName="stroke-dasharray" values="75 25;25 75;75 25" dur="2.5s" repeatCount="indefinite" />
+            </line>
+            
+            {/* Additional connecting lines */}
+            <line x1="85" y1="60" x2="115" y2="140">
+              <animate attributeName="stroke-dasharray" values="0 80;40 40;80 0;40 40;0 80" dur="3.5s" repeatCount="indefinite" />
+            </line>
+            <line x1="115" y1="60" x2="85" y2="140">
+              <animate attributeName="stroke-dasharray" values="40 40;80 0;40 40;0 80;40 40" dur="3.5s" repeatCount="indefinite" />
+            </line>
+          </g>
+
+          {/* Neural network nodes */}
+          <g>
+            {/* Center node */}
+            <circle cx="100" cy="100" r="8" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="6;12;6" dur="2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
+            </circle>
+
+            {/* Outer nodes */}
+            <circle cx="70" cy="70" r="5" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="4;7;4" dur="2.5s" repeatCount="indefinite" begin="0.2s" />
+              <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" begin="0.2s" />
+            </circle>
+            
+            <circle cx="130" cy="70" r="5" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="4;7;4" dur="2.5s" repeatCount="indefinite" begin="0.4s" />
+              <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" begin="0.4s" />
+            </circle>
+            
+            <circle cx="130" cy="130" r="5" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="4;7;4" dur="2.5s" repeatCount="indefinite" begin="0.6s" />
+              <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" begin="0.6s" />
+            </circle>
+            
+            <circle cx="70" cy="130" r="5" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="4;7;4" dur="2.5s" repeatCount="indefinite" begin="0.8s" />
+              <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" begin="0.8s" />
+            </circle>
+
+            {/* Additional nodes */}
+            <circle cx="100" cy="50" r="4" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="3;6;3" dur="3s" repeatCount="indefinite" begin="0.5s" />
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" begin="0.5s" />
+            </circle>
+            
+            <circle cx="150" cy="100" r="4" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="3;6;3" dur="3s" repeatCount="indefinite" begin="0.7s" />
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" begin="0.7s" />
+            </circle>
+            
+            <circle cx="100" cy="150" r="4" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="3;6;3" dur="3s" repeatCount="indefinite" begin="0.9s" />
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" begin="0.9s" />
+            </circle>
+            
+            <circle cx="50" cy="100" r="4" fill="url(#nodeGradient)">
+              <animate attributeName="r" values="3;6;3" dur="3s" repeatCount="indefinite" begin="0.3s" />
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite" begin="0.3s" />
+            </circle>
+          </g>
+
+          {/* Data flow particles */}
+          <g>
+            <circle cx="0" cy="0" r="2" fill="#c084fc" opacity="0.8">
+              <animateMotion dur="4s" repeatCount="indefinite">
+                <path d="M 70,70 Q 100,50 130,70 Q 150,100 130,130 Q 100,150 70,130 Q 50,100 70,70" />
+              </animateMotion>
+              <animate attributeName="opacity" values="0;1;0.8;1;0" dur="4s" repeatCount="indefinite" />
+            </circle>
+            
+            <circle cx="0" cy="0" r="1.5" fill="#7e22ce" opacity="0.6">
+              <animateMotion dur="3s" repeatCount="indefinite" begin="1s">
+                <path d="M 130,70 Q 100,50 70,70 Q 50,100 70,130 Q 100,150 130,130 Q 150,100 130,70" />
+              </animateMotion>
+              <animate attributeName="opacity" values="0;0.8;1;0.6;0" dur="3s" repeatCount="indefinite" begin="1s" />
+            </circle>
+            
+            <circle cx="0" cy="0" r="1" fill="#c084fc" opacity="0.9">
+              <animateMotion dur="2.5s" repeatCount="indefinite" begin="0.5s">
+                <path d="M 100,50 L 100,150 L 100,50" />
+              </animateMotion>
+              <animate attributeName="opacity" values="0;1;0.9;0" dur="2.5s" repeatCount="indefinite" begin="0.5s" />
+            </circle>
+
+            <circle cx="0" cy="0" r="1" fill="#7e22ce" opacity="0.7">
+              <animateMotion dur="2.8s" repeatCount="indefinite" begin="1.5s">
+                <path d="M 50,100 L 150,100 L 50,100" />
+              </animateMotion>
+              <animate attributeName="opacity" values="0;0.9;1;0" dur="2.8s" repeatCount="indefinite" begin="1.5s" />
+            </circle>
+          </g>
+
+          {/* Outer rotating ring */}
+          <circle cx="100" cy="100" r="85" stroke="url(#nodeGradient)" strokeWidth="1" fill="none" opacity="0.3" strokeDasharray="10 5">
+            <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 100 100;360 100 100" dur="8s" repeatCount="indefinite" />
+          </circle>
+
+          {/* Inner rotating ring (opposite direction) */}
+          <circle cx="100" cy="100" r="25" stroke="url(#nodeGradient)" strokeWidth="1" fill="none" opacity="0.4" strokeDasharray="5 3">
+            <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="360 100 100;0 100 100" dur="6s" repeatCount="indefinite" />
+          </circle>
+        </svg>
       </div>
     );
   }
 
   if (projects.length === 0) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen bg-gray-900 text-white p-6 text-center">
+      <div className="flex flex-col justify-center items-center h-screen bg-gray-950 text-white p-6 text-center">
         <h1 className="text-4xl font-bold mb-4">No Projects Found</h1>
         <p className="text-lg text-gray-400">
           It looks like there are no VLSI projects to display at the moment. Please check back later!
@@ -216,7 +354,6 @@ export default function ClubProjectsPage() {
                 <motion.div className="bg-gray-800 rounded-xl p-6 shadow-md transition-shadow duration-300 hover:shadow-lg">
                     <h3 className="text-xl font-semibold text-purple-400 mb-3">Team Members</h3>
                     <ul className="space-y-3">
-                    {/* Filter out any null values before mapping */}
                     {project.members
                         .filter(member => member !== null)
                         .map((member, idx) => (
@@ -262,7 +399,6 @@ export default function ClubProjectsPage() {
                 <motion.div className="bg-gray-800 rounded-xl p-6 shadow-md transition-shadow duration-300 hover:shadow-lg">
                     <h3 className="text-xl font-semibold text-purple-400 mb-3">Mentors</h3>
                     <ul className="space-y-3">
-                    {/* Filter out any null values before mapping */}
                     {project.mentors
                         .filter(mentor => mentor !== null)
                         .map((mentor, idx) => (
