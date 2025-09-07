@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import YouTube from 'react-lite-youtube-embed';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
+import Header from '../../components/header';
+import Footer from '../../components/footer';
 
 // Define the types for your project data
 interface Project {
@@ -80,6 +82,7 @@ export default function ClubProjectsPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen bg-gray-950 text-white">
+        <Header />
         <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
           <defs>
             {/* Gradient definitions with purple shades */}
@@ -246,13 +249,14 @@ export default function ClubProjectsPage() {
 
   return (
     <div className="bg-gray-950 text-white min-h-screen font-sans antialiased p-8 lg:p-16">
+      <Header />
       <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
         className="text-center mb-16"
       >
-        <h1 className="text-5xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 leading-tight">
+        <h1 className="text-5xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 leading-tight mt-15">
           VLSI Club Projects
         </h1>
         <p className="mt-4 text-xl text-gray-300 max-w-2xl mx-auto">
@@ -565,6 +569,7 @@ export default function ClubProjectsPage() {
           ))}
         </motion.div>
       </AnimatePresence>
+      <Footer />
     </div>
   );
 }
