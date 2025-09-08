@@ -153,8 +153,8 @@ export default function Home() {
             initialH3Text="Bridging Academia and Industry in Semiconductor Design."
           />
           <div className="w-full mt-15">
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-10 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
-              Latest VLSI Pulse
+            <h3 className="text-3xl md:text-4xl font-bold text-green mb-10 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
+              Latest @ VLSI Pulse
             </h3>
             <div className="embla overflow-hidden" ref={emblaRef}>
               <div className="embla__container flex gap-8">
