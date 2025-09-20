@@ -60,8 +60,15 @@ export async function GET() {
         caption
       }
     }`;
+    const videosQuery = `*[_type == "videoDump"] {
+      ...,
+      'videos': videos[] {
+        ...,
+        file { asset -> { url } }
+      }
+    } | order(publishDate desc)`;
 
-    const [resources, hardware, members, faculty, alumni, eventSimple, eventDetailed, upcomingEvents, hotTopics, projects] = await Promise.all([
+    const [resources, hardware, members, faculty, alumni, eventSimple, eventDetailed, upcomingEvents, hotTopics, projects, videos] = await Promise.all([
       fetchWithTimeout(client, resourcesQuery),
       fetchWithTimeout(client, hardwareQuery),
       fetchWithTimeout(client, membersQuery),
@@ -71,10 +78,11 @@ export async function GET() {
       fetchWithTimeout(client, eventDetailedQuery),
       fetchWithTimeout(client, upcomingEventQuery),
       fetchWithTimeout(client, hotTopicsQuery),
-      fetchWithTimeout(client, projectsQuery)
+      fetchWithTimeout(client, projectsQuery),
+      fetchWithTimeout(client, videosQuery)
     ]);
 
-    return NextResponse.json({ resources, hardware, members, faculty, alumni, eventSimple, eventDetailed, upcomingEvents, hotTopics, projects });
+    return NextResponse.json({ resources, hardware, members, faculty, alumni, eventSimple, eventDetailed, upcomingEvents, hotTopics, projects, videos });
   } catch (error) {
     console.error('Error in /api/sanity:', error);
     return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
