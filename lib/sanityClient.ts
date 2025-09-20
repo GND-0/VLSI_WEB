@@ -11,11 +11,12 @@ if (!projectId || !dataset || !token) {
   );
 }
 
-console.log('Sanity config (server-side):', {
+/* console.log('Sanity config (server-side):', {
   projectId,
   dataset,
   token: token ? 'present' : 'not set',
 });
+*/
 
 export const client = createClient({
   projectId,
@@ -27,8 +28,9 @@ export const client = createClient({
 
 // Client-side logging for debugging
 if (typeof window !== 'undefined') {
-  console.log('Sanity config (client-side):', {
+  /*console.log('Sanity config (client-side):', {
     projectId,
     dataset,
   });
+  */
 }

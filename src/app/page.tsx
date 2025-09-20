@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Exo_2 } from "next/font/google";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -9,7 +9,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import { ExternalLink, ThumbsUp, Eye, Play, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 
-// Load Exo_2 font for article-like, techy aesthetic
 const exo2 = Exo_2({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -34,12 +33,26 @@ interface HotTopic {
   views?: number;
 }
 
-// Function to estimate reading time based on word count
+// Add Video interfaces (based on schema)
+interface Video {
+  _key: string;
+  title: string;
+  description?: string;
+  category?: string;
+  file: { asset: { url: string } };
+}
+
+interface VideoDump {
+  _id: string;
+  title: string;
+  videos: Video[];
+  publishDate: string;
+}
+
 const calculateReadingTime = (text: string) => {
   const wordsPerMinute = 200;
   const wordCount = text.trim().split(/\s+/).length;
-  const minutes = Math.ceil(wordCount / wordsPerMinute);
-  return minutes;
+  return Math.ceil(wordCount / wordsPerMinute);
 };
 
 export default function Home() {
@@ -50,23 +63,22 @@ export default function Home() {
     slidesToScroll: 1,
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [showWhiteBorder, setShowWhiteBorder] = useState(false);
   
-  // Video section states
   const [isVideoInView, setIsVideoInView] = useState(false);
   const [hasAudioPlayed, setHasAudioPlayed] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // State to control particle rendering
   const [particlesReady, setParticlesReady] = useState(false);
+  const [homeVideoUrl, setHomeVideoUrl] = useState<string | null>(null); // Dynamic video URL from Sanity
 
-  // Pre-compute particle styles on client mount
   useEffect(() => {
-    setParticlesReady(true); // Enable particles on client side
+    setParticlesReady(true);
   }, []);
 
-  // Fetch data
+  // Updated fetch to include videos
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,14 +88,20 @@ export default function Home() {
         const data = await response.json();
         if (data.error) throw new Error(data.error);
         setHotTopics(data.hotTopics || []);
+
+        // Derive home video URL (e.g., first video with category 'home')
+        if (data.videos && data.videos.length > 0) {
+          const allVideos: Video[] = data.videos.flatMap((doc: VideoDump) => doc.videos);
+          const homeVideo = allVideos.find(v => v.category === 'home');
+          setHomeVideoUrl(homeVideo?.file.asset.url || null);
+        }
       } catch (error) {
-        console.error("Error fetching hot topics for carousel:", error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, []);
 
-  // Intersection Observer for video section
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -97,7 +115,7 @@ export default function Home() {
         }
       },
       {
-        threshold: 0.5, // Trigger when 50% of the video is visible
+        threshold: 0.5,
       }
     );
 
@@ -112,15 +130,14 @@ export default function Home() {
     };
   }, [hasAudioPlayed]);
 
-  // Smooth scroll to video section
   const scrollToVideo = () => {
+    setShowWhiteBorder(true);
     sectionRef.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
     });
   };
 
-  // Toggle audio
   const toggleAudio = () => {
     if (videoRef.current) {
       videoRef.current.muted = !videoRef.current.muted;
@@ -128,7 +145,6 @@ export default function Home() {
     }
   };
 
-  // Auto-scroll and dot navigation
   const autoScroll = useCallback(() => {
     if (emblaApi) {
       const autoPlay = () => {
@@ -144,7 +160,6 @@ export default function Home() {
     return stopAutoScroll;
   }, [autoScroll]);
 
-  // Update selected index for dots
   useEffect(() => {
     if (!emblaApi) return;
 
@@ -268,7 +283,6 @@ export default function Home() {
           imageRendering: "crisp-edges",
         }}
       >
-        {/* Hero Section */}
         <main className="z-10 flex flex-col items-center text-center w-full max-w-7xl mx-auto space-y-16 mt-30">
           <GlitchText
             h1Text="GND_0 VLSI CLUB IIIT DHARWAD"
@@ -276,13 +290,15 @@ export default function Home() {
           />
           <button
             onClick={scrollToVideo}
-            className="tour-button px-8 py-4 rounded-full text-white font-bold text-lg shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 mt-10"
+            className={`tour-button px-8 py-4 rounded-full text-white font-bold text-lg shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 mt-10 ${
+              showWhiteBorder ? 'border-[3px] border-white' : ''
+            }`}
           >
             <Play className="inline-block w-5 h-5 mr-2" />
             Take the Ultimate Tour
           </button>
           
-          {/* Enhanced Video Section */}
+          {/* Video Container with Linear Gradient Border */}
           <div 
             ref={sectionRef}
             className={`mt-65 relative w-full h-[500px] rounded-2xl overflow-hidden ${
@@ -302,42 +318,47 @@ export default function Home() {
               )}
             </button>
 
+            {/* Video Container with Linear Gradient Border */}
             <div className={`absolute inset-0 w-full h-full ${isVideoInView ? 'video-animate' : ''}`}>
-              <video 
-                ref={videoRef}
-                autoPlay 
-                loop 
-                playsInline 
-                muted={isMuted}
-                className="absolute inset-0 w-full h-full object-cover z-10 rounded-2xl"
-              >
-                <source src="/GND0.mp4" type="video/mp4" />
-              </video>
-              
-              {/* Animated border effect */}
-              <div className="absolute inset-0 z-40 rounded-2xl">
-                <div className="absolute inset-0 rounded-2xl border-2 border-[linear-gradient(to_right,from-blue-500,via-purple-500,to-pink-500)]"></div>
-                <div className="absolute inset-[2px] rounded-2xl bg-black/20"></div>
+              {/* Gradient Border Container */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-[3px]">
+                {/* Video element - Now dynamic from Sanity */}
+                <video 
+                  ref={videoRef}
+                  autoPlay 
+                  loop 
+                  playsInline 
+                  muted={isMuted}
+                  className="w-full h-full object-cover rounded-2xl bg-black"
+                  poster={homeVideoUrl ? undefined : "/placeholder-video-poster.jpg"} // Optional: Add a static poster if no video
+                >
+                  {homeVideoUrl ? (
+                    <source src={homeVideoUrl} type="video/mp4" />
+                  ) : (
+                    <p>Loading video from Sanity... (Check console for errors)</p>
+                  )}
+                  <p>Video failed to load. Check the file path or format.</p>
+                </video>
               </div>
-
-              {/* Floating particles effect rendered on client side */}
-              {particlesReady && (
-                <div className="absolute inset-0 z-35 pointer-events-none">
-                  {[...Array(20)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-2 h-2 bg-blue-400/30 rounded-full animate-ping"
-                      style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        animationDelay: `${Math.random() * 3}s`,
-                        animationDuration: `${2 + Math.random() * 2}s`,
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
             </div>
+
+            {/* Floating particles effect rendered on client side */}
+            {particlesReady && (
+              <div className="absolute inset-0 z-35 pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-2 h-2 bg-blue-400/30 rounded-full animate-ping"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      animationDelay: `${Math.random() * 3}s`,
+                      animationDuration: `${2 + Math.random() * 2}s`,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="w-full mt-15">
