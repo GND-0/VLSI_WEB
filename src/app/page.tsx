@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import Script from "next/script";
 import { Exo_2 } from "next/font/google";
 import Header from "../components/header";
 import Footer from "../components/footer";
@@ -33,7 +34,6 @@ interface HotTopic {
   views?: number;
 }
 
-// Add Video interfaces (based on schema)
 interface Video {
   _key: string;
   title: string;
@@ -68,17 +68,18 @@ export default function Home() {
   const [isVideoInView, setIsVideoInView] = useState(false);
   const [hasAudioPlayed, setHasAudioPlayed] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoError, setVideoError] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<any>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const [particlesReady, setParticlesReady] = useState(false);
-  const [homeVideoUrl, setHomeVideoUrl] = useState<string | null>(null); // Dynamic video URL from Sanity
+  const [homeVideoUrl, setHomeVideoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     setParticlesReady(true);
   }, []);
 
-  // Updated fetch to include videos
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -89,7 +90,6 @@ export default function Home() {
         if (data.error) throw new Error(data.error);
         setHotTopics(data.hotTopics || []);
 
-        // Derive home video URL (e.g., first video with category 'home')
         if (data.videos && data.videos.length > 0) {
           const allVideos: Video[] = data.videos.flatMap((doc: VideoDump) => doc.videos);
           const homeVideo = allVideos.find(v => v.category === 'home');
@@ -103,15 +103,41 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (!iframeRef.current || typeof window === 'undefined') return;
+
+    const initPlayer = () => {
+      try {
+        if ((window as any).Vimeo && (window as any).Vimeo.Player) {
+          playerRef.current = new (window as any).Vimeo.Player(iframeRef.current);
+          playerRef.current.setVolume(0);
+          setIsMuted(true);
+          setVideoError(false);
+        } else {
+          setTimeout(initPlayer, 500);
+        }
+      } catch (error) {
+        console.error('Vimeo Player Init Error:', error);
+        setVideoError(true);
+      }
+    };
+
+    const timer = setTimeout(initPlayer, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVideoInView(true);
-          if (videoRef.current && !hasAudioPlayed) {
-            videoRef.current.muted = false;
+          if (playerRef.current && !hasAudioPlayed && !videoError) {
+            playerRef.current.setVolume(1).catch(console.error);
             setIsMuted(false);
             setHasAudioPlayed(true);
+            playerRef.current.play().catch(console.error);
           }
+        } else if (playerRef.current && !videoError) {
+          playerRef.current.pause().catch(console.error);
         }
       },
       {
@@ -128,7 +154,7 @@ export default function Home() {
         observer.unobserve(sectionRef.current);
       }
     };
-  }, [hasAudioPlayed]);
+  }, [hasAudioPlayed, videoError]);
 
   const scrollToVideo = () => {
     setShowWhiteBorder(true);
@@ -139,18 +165,20 @@ export default function Home() {
   };
 
   const toggleAudio = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
+    if (playerRef.current && !videoError) {
+      playerRef.current.getVolume().then((volume: number) => {
+        const newVolume = volume > 0 ? 0 : 1;
+        playerRef.current.setVolume(newVolume).catch(console.error);
+        setIsMuted(newVolume === 0);
+      }).catch(console.error);
     }
   };
 
   const autoScroll = useCallback(() => {
     if (emblaApi) {
-      const autoPlay = () => {
+      const interval = setInterval(() => {
         emblaApi.scrollNext();
-      };
-      const interval = setInterval(autoPlay, 4000);
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [emblaApi]);
@@ -159,16 +187,6 @@ export default function Home() {
     const stopAutoScroll = autoScroll();
     return stopAutoScroll;
   }, [autoScroll]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    const interval = setInterval(() => {
-      emblaApi.scrollNext();
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [emblaApi]);
 
   return (
     <div className={`flex flex-col min-h-screen bg-black ${exo2.className}`}>
@@ -271,7 +289,42 @@ export default function Home() {
           background: rgba(59, 130, 246, 0.8);
           transform: scale(1.1);
         }
+        .video-inner-container {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          background: black;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        .video-inner-container iframe {
+          position: absolute;
+          top: -6px;
+          left: -6px;
+          width: calc(100% + 12px);
+          height: calc(100% + 12px);
+          border: none;
+        }
+        .video-inner-container video {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
       `}</style>
+
+      <Script
+        src="https://player.vimeo.com/api/player.js"
+        strategy="afterInteractive"
+        onLoad={() => console.log('Vimeo API loaded')}
+        onError={(e) => {
+          console.error('Vimeo Script Error:', e);
+          setVideoError(true);
+        }}
+      />
+
       <Header />
       <div
         className="relative flex flex-col items-center justify-center flex-grow px-6 sm:px-8 lg:px-12 py-16"
@@ -298,14 +351,12 @@ export default function Home() {
             Take the Ultimate Tour
           </button>
           
-          {/* Video Container with Linear Gradient Border */}
           <div 
             ref={sectionRef}
-            className={`mt-65 relative w-full h-[500px] rounded-2xl overflow-hidden ${
+            className={`mt-65 relative w-full h-[500px] rounded-2xl ${
               isVideoInView ? 'video-section-animate' : ''
             }`}
           >
-            {/* Audio Control Button */}
             <button
               onClick={toggleAudio}
               className="audio-control absolute top-4 right-4 z-50 p-3 rounded-full text-white shadow-lg"
@@ -318,31 +369,35 @@ export default function Home() {
               )}
             </button>
 
-            {/* Video Container with Linear Gradient Border */}
             <div className={`absolute inset-0 w-full h-full ${isVideoInView ? 'video-animate' : ''}`}>
-              {/* Gradient Border Container */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-[3px]">
-                {/* Video element - Now dynamic from Sanity */}
-                <video 
-                  ref={videoRef}
-                  autoPlay 
-                  loop 
-                  playsInline 
-                  muted={isMuted}
-                  className="w-full h-full object-cover rounded-2xl bg-black"
-                  poster={homeVideoUrl ? undefined : "/placeholder-video-poster.jpg"} // Optional: Add a static poster if no video
-                >
-                  {homeVideoUrl ? (
-                    <source src={homeVideoUrl} type="video/mp4" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-[6px]">
+                <div className="video-inner-container">
+                  {!videoError ? (
+                    <iframe
+                      ref={iframeRef}
+                      src="https://player.vimeo.com/video/1124568750?badge=0&autopause=0&player_id=0&autoplay=1&muted=1&loop=1"
+                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      title="GND_Intro"
+                    />
                   ) : (
-                    <p>Loading video from Sanity... (Check console for errors)</p>
+                    homeVideoUrl && (
+                      <video 
+                        autoPlay 
+                        loop 
+                        playsInline 
+                        muted={isMuted}
+                        preload="auto"
+                        className="w-full h-full object-cover"
+                      >
+                        <source src={homeVideoUrl} type="video/mp4" />
+                      </video>
+                    )
                   )}
-                  <p>Video failed to load. Check the file path or format.</p>
-                </video>
+                </div>
               </div>
             </div>
 
-            {/* Floating particles effect rendered on client side */}
             {particlesReady && (
               <div className="absolute inset-0 z-35 pointer-events-none">
                 {[...Array(20)].map((_, i) => (
@@ -367,7 +422,7 @@ export default function Home() {
             </h3>
             <div className="embla overflow-hidden" ref={emblaRef}>
               <div className="embla__container flex gap-8">
-                {hotTopics.map((topic, index) => (
+                {hotTopics.map((topic) => (
                   <div
                     key={topic._id}
                     className="embla__slide flex-[0_0_340px] min-w-0 card"
