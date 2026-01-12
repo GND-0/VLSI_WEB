@@ -15,29 +15,34 @@ interface MemberCardProps {
   position: string;
   imageSrc: string;
   linkedin: string;
-  className?: string; // Add className as an optional prop
+  className?: string;
 }
 
 export default function MemberCard({ name, position, imageSrc, linkedin, className }: MemberCardProps) {
   return (
-    <div className={`flex flex-col items-center text-center p-4 bg-black/40 backdrop-blur-md rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ${inter.className} ${className || ""}`}>
-      <div className="relative group overflow-hidden">
+    <div className={`group flex flex-col items-center text-center p-6 bg-gray-900/90 backdrop-blur-xl rounded-xl border border-gray-800 transition-all duration-500 hover:border-teal-600/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-900/20 ${inter.className} ${className || ""}`}>
+      <div className="relative overflow-hidden">
         <Image
           src={imageSrc || "/placeholder.png"}
           alt={`${name}'s profile`}
-          width={240}
-          height={240}
+          width={200}
+          height={200}
           unoptimized={true}
-          className="w-60 h-60 object-cover rounded-lg border-2 border-blue-500 shadow-inner transition-transform duration-300 group-hover:scale-105"
+          className="w-48 h-48 object-cover rounded-xl border border-gray-700 transition-all duration-500 group-hover:scale-105 group-hover:border-teal-600/30"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-blue-500/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg">
-          <Link href={linkedin} target="_blank" rel="noopener noreferrer" className="p-2 bg-blue-600/80 rounded-full hover:bg-blue-700 transition-colors">
-            <Linkedin className="h-6 w-6 text-white" />
+        <div className="absolute inset-0 bg-linear-to-t from-gray-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4 rounded-xl">
+          <Link 
+            href={linkedin} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="p-2.5 bg-teal-600 hover:bg-teal-500 rounded-lg transition-all duration-300 shadow-lg shadow-teal-900/30"
+          >
+            <Linkedin className="h-5 w-5 text-white" />
           </Link>
         </div>
       </div>
-      <h3 className="mt-4 text-xl font-bold text-white bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text">{name}</h3>
-      <p className="text-gray-400 text-sm font-medium mt-1">{position}</p>
+      <h3 className="mt-4 text-lg font-semibold text-white">{name}</h3>
+      <p className="text-gray-400 text-sm mt-1">{position}</p>
     </div>
   );
 }

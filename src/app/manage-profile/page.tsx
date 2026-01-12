@@ -88,11 +88,11 @@ export default function ManageProfile() {
   };
 
   const profileColors = [
-    'from-purple-500 to-pink-500',
-    'from-blue-500 to-cyan-500',
+    'from-teal-500 to-cyan-500',
+    'from-teal-500 to-cyan-500',
     'from-green-500 to-teal-500',
     'from-orange-500 to-red-500',
-    'from-indigo-500 to-purple-500'
+    'from-teal-500 to-cyan-500'
   ];
 
   const userColorIndex = formData.name ? formData.name.length % profileColors.length : 0;
@@ -104,39 +104,12 @@ export default function ManageProfile() {
   if (!user) return null;
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white ${customFont.className} relative overflow-hidden`}>
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Floating Particles */}
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-blue-400 rounded-full animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-        
-        {/* Gradient Orbs */}
-        <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        
-        {/* Interactive Mouse Trail */}
-        {isHovering && (
-          <div
-            className="absolute w-8 h-8 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur-sm opacity-70 pointer-events-none transition-all duration-200"
-            style={{
-              left: mousePosition.x - 16,
-              top: mousePosition.y - 16,
-              transform: 'translate(-50%, -50%)'
-            }}
-          />
-        )}
-      </div>
+    <div className={`min-h-screen bg-black text-white ${customFont.className} relative overflow-hidden`}>
+      {/* Grid Background Pattern */}
+      <div
+        className="absolute inset-0 [background-size:20px_20px] [background-image:linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)]"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-black [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 py-8">
@@ -151,7 +124,7 @@ export default function ManageProfile() {
           
           {/* Success Notification */}
           {showSuccess && (
-            <div className="fixed top-24 right-6 z-50 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-lg shadow-xl animate-bounce">
+            <div className="fixed top-24 right-6 z-50 bg-linear-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-lg shadow-xl animate-bounce">
               <div className="flex items-center space-x-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -168,21 +141,21 @@ export default function ManageProfile() {
             {/* Profile Card */}
             <div className="lg:col-span-1">
               <div 
-                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 hover:border-blue-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10"
+                className="bg-linear-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6 hover:border-teal-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-teal-500/10"
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
               >
                 {/* Profile Picture */}
                 <div className="flex flex-col items-center mb-6">
                   <div className="relative">
-                    <div className={`w-24 h-24 rounded-full bg-gradient-to-br ${profileColors[userColorIndex]} flex items-center justify-center text-white font-bold text-2xl shadow-2xl ring-4 ring-white/20 hover:ring-white/40 transition-all duration-300 hover:scale-110`}>
+                    <div className={`w-24 h-24 rounded-full bg-linear-to-br ${profileColors[userColorIndex]} flex items-center justify-center text-white font-bold text-2xl shadow-2xl ring-4 ring-white/20 hover:ring-white/40 transition-all duration-300 hover:scale-110`}>
                       {getInitials(formData.name)}
                     </div>
                     {/* Pulsing Rings */}
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 animate-ping opacity-20"></div>
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 animate-ping opacity-20" style={{ animationDelay: '0.5s' }}></div>
+                    <div className="absolute inset-0 rounded-full bg-linear-to-br from-teal-400 to-cyan-500 animate-ping opacity-20"></div>
+                    <div className="absolute inset-0 rounded-full bg-linear-to-br from-teal-400 to-cyan-500 animate-ping opacity-20" style={{ animationDelay: '0.5s' }}></div>
                   </div>
-                  <h1 className="text-2xl font-bold mt-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  <h1 className="text-2xl font-bold mt-4 text-teal-400">
                     {formData.name || 'User'}
                   </h1>
                   <p className="text-gray-400 text-sm mt-1">{formData.department && formData.year ? `${formData.department} • ${formData.year}` : formData.email}</p>
@@ -190,19 +163,19 @@ export default function ManageProfile() {
 
                 {/* Quick Stats */}
                 <div className="space-y-4">
-                  <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg p-4 border border-blue-500/20">
+                  <div className="bg-linear-to-r from-teal-500/10 to-cyan-500/10 rounded-lg p-4 border border-teal-500/20">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Member Since</span>
-                      <span className="text-blue-400 font-semibold">2024</span>
+                      <span className="text-teal-400 font-semibold">2024</span>
                     </div>
                   </div>
-                  <div className="bg-gradient-to-r from-green-500/10 to-teal-500/10 rounded-lg p-4 border border-green-500/20">
+                  <div className="bg-linear-to-r from-green-500/10 to-teal-500/10 rounded-lg p-4 border border-green-500/20">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Events Attended</span>
                       <span className="text-green-400 font-semibold">12</span>
                     </div>
                   </div>
-                  <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg p-4 border border-orange-500/20">
+                  <div className="bg-linear-to-r from-orange-500/10 to-red-500/10 rounded-lg p-4 border border-orange-500/20">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-300">Projects</span>
                       <span className="text-orange-400 font-semibold">5</span>
@@ -214,17 +187,17 @@ export default function ManageProfile() {
 
             {/* Form Section */}
             <div className="lg:col-span-2">
-              <div className="bg-gradient-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 hover:border-blue-500/30 transition-all duration-500">
+              <div className="bg-linear-to-br from-gray-800/30 to-gray-900/30 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 hover:border-teal-500/30 transition-all duration-500">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  <h2 className="text-3xl font-bold text-teal-400">
                     Profile Settings
                   </h2>
                   <button
                     onClick={() => setIsEditing(!isEditing)}
                     className={`px-6 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
                       isEditing 
-                        ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white' 
-                        : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white'
+                        ? 'bg-linear-to-r from-red-500 to-red-600 hover:from-red-400 hover:to-red-500 text-white' 
+                        : 'bg-teal-600 hover:bg-teal-500 text-white'
                     }`}
                   >
                     {isEditing ? 'Cancel' : 'Edit Profile'}
@@ -242,7 +215,7 @@ export default function ManageProfile() {
                         value={formData.name}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white placeholder-gray-400"
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white placeholder-gray-400"
                         placeholder="Enter your full name"
                       />
                     </div>
@@ -254,7 +227,7 @@ export default function ManageProfile() {
                         value={formData.email}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white placeholder-gray-400"
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white placeholder-gray-400"
                         placeholder="Enter your email"
                       />
                     </div>
@@ -269,7 +242,7 @@ export default function ManageProfile() {
                         value={formData.department}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white"
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white"
                       >
                         <option value="">Select Department</option>
                         {departments.map(dept => (
@@ -284,7 +257,7 @@ export default function ManageProfile() {
                         value={formData.year}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white"
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white"
                       >
                         <option value="">Select Year</option>
                         {years.map(year => (
@@ -303,7 +276,7 @@ export default function ManageProfile() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white placeholder-gray-400"
+                      className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white placeholder-gray-400"
                       placeholder="Enter your phone number"
                     />
                   </div>
@@ -317,7 +290,7 @@ export default function ManageProfile() {
                       onChange={handleInputChange}
                       disabled={!isEditing}
                       rows={4}
-                      className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white placeholder-gray-400 resize-none"
+                      className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed text-white placeholder-gray-400 resize-none"
                       placeholder="Tell us about yourself..."
                     />
                   </div>
@@ -334,8 +307,8 @@ export default function ManageProfile() {
                           disabled={!isEditing}
                           className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 transform hover:scale-105 disabled:cursor-not-allowed ${
                             formData.interests.includes(interest)
-                              ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-blue-500/25'
-                              : 'bg-gray-800/50 text-gray-300 border border-gray-600 hover:border-blue-500/50 hover:bg-blue-500/10'
+                              ? 'bg-teal-600 text-white shadow-lg hover:shadow-teal-500/25'
+                              : 'bg-gray-800/50 text-gray-300 border border-gray-600 hover:border-teal-500/50 hover:bg-teal-500/10'
                           }`}
                         >
                           {interest}
@@ -350,7 +323,7 @@ export default function ManageProfile() {
                       <button
                         onClick={handleSave}
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-700 text-white py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/25 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none relative overflow-hidden"
+                        className="w-full bg-teal-600 hover:bg-teal-500 disabled:bg-gray-600 text-white py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-teal-500/25 disabled:cursor-not-allowed disabled:scale-100 disabled:shadow-none relative overflow-hidden"
                       >
                         {loading ? (
                           <div className="flex items-center justify-center space-x-2">
@@ -360,7 +333,7 @@ export default function ManageProfile() {
                         ) : (
                           <>
                             <span className="relative z-10">Save Changes</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                            <div className="absolute inset-0 bg-teal-500 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                           </>
                         )}
                       </button>
@@ -371,18 +344,18 @@ export default function ManageProfile() {
 
               {/* Additional Actions */}
               <div className="mt-8 grid md:grid-cols-2 gap-6">
-                <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-6 hover:border-orange-500/40 transition-all duration-300">
+                <div className="bg-linear-to-br from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-6 hover:border-orange-500/40 transition-all duration-300">
                   <h3 className="text-lg font-bold text-orange-400 mb-2">Security Settings</h3>
                   <p className="text-gray-400 text-sm mb-4">Update your password and security preferences</p>
-                  <button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
+                  <button className="bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
                     Manage Security
                   </button>
                 </div>
 
-                <div className="bg-gradient-to-br from-green-500/10 to-teal-500/10 border border-green-500/20 rounded-xl p-6 hover:border-green-500/40 transition-all duration-300">
+                <div className="bg-linear-to-br from-green-500/10 to-teal-500/10 border border-green-500/20 rounded-xl p-6 hover:border-green-500/40 transition-all duration-300">
                   <h3 className="text-lg font-bold text-green-400 mb-2">Account Data</h3>
                   <p className="text-gray-400 text-sm mb-4">Download or delete your account data</p>
-                  <button className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-400 hover:to-teal-400 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
+                  <button className="bg-linear-to-r from-green-500 to-teal-500 hover:from-green-400 hover:to-teal-400 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105">
                     Export Data
                   </button>
                 </div>
@@ -395,7 +368,7 @@ export default function ManageProfile() {
         <div className="fixed bottom-8 right-8 z-50">
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white p-4 rounded-full shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group"
+            className="bg-teal-600 hover:bg-teal-500 text-white p-4 rounded-full shadow-2xl hover:shadow-teal-500/25 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group"
           >
             <svg className="w-6 h-6 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />

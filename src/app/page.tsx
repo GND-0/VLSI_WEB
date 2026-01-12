@@ -189,128 +189,31 @@ export default function Home() {
   }, [autoScroll]);
 
   return (
-    <div className={`flex flex-col min-h-screen bg-black ${exo2.className}`}>
+    <div className={`flex flex-col min-h-screen bg-gray-950 ${exo2.className}`}>
       <style jsx>{`
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes glitch {
-          0% {
-            transform: translate(0);
-          }
-          20% {
-            transform: translate(-2px, 2px);
-          }
-          40% {
-            transform: translate(2px, -2px);
-          }
-          60% {
-            transform: translate(-2px, 0);
-          }
-          80% {
-            transform: translate(2px, 2px);
-          }
-          100% {
-            transform: translate(0);
-          }
-        }
-        @keyframes slideInFromBottom {
-          from {
-            opacity: 0;
-            transform: translateY(100px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes scaleIn {
-          from {
-            opacity: 0;
-            transform: scale(0.8);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-        @keyframes pulse {
-          0%, 100% {
-            transform: scale(1);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-          }
-          50% {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
-          }
-        }
-        @keyframes shimmer {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
         .card {
           animation: fadeIn 0.6s ease-out;
-        }
-        .glitch-title:hover {
-          animation: glitch 0.3s linear 2;
-        }
-        .video-section-animate {
-          animation: slideInFromBottom 1s ease-out;
-        }
-        .video-animate {
-          animation: scaleIn 1s ease-out 0.3s both;
-        }
-        .tour-button {
-          background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899);
-          background-size: 300% 300%;
-          animation: shimmer 3s ease-in-out infinite;
-          transition: all 0.3s ease;
-        }
-        .tour-button:hover {
-          animation: pulse 1s infinite, shimmer 3s ease-in-out infinite;
-        }
-        .audio-control {
-          backdrop-filter: blur(10px);
-          background: rgba(0, 0, 0, 0.7);
-          transition: all 0.3s ease;
-        }
-        .audio-control:hover {
-          background: rgba(59, 130, 246, 0.8);
-          transform: scale(1.1);
         }
         .video-inner-container {
           position: relative;
           width: 100%;
           height: 100%;
-          background: black;
-          border-radius: 10px;
+          background: #0a0a0a;
+          border-radius: 12px;
           overflow: hidden;
         }
-        .video-inner-container iframe {
+        .video-inner-container iframe,
+        .video-inner-container video {
           position: absolute;
           top: -6px;
           left: -6px;
           width: calc(100% + 12px);
           height: calc(100% + 12px);
           border: none;
-        }
-        .video-inner-container video {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
           object-fit: cover;
         }
       `}</style>
@@ -326,51 +229,46 @@ export default function Home() {
       />
 
       <Header />
-      <div
-        className="relative flex flex-col items-center justify-center flex-grow px-6 sm:px-8 lg:px-12 py-16"
-        style={{
-          backgroundImage: "url('/image.png')",
-          backgroundSize: "auto",
-          backgroundRepeat: "repeat",
-          backgroundPosition: "top left",
-          imageRendering: "crisp-edges",
-        }}
-      >
-        <main className="z-10 flex flex-col items-center text-center w-full max-w-7xl mx-auto space-y-16 mt-30">
-          <GlitchText
-            h1Text="GND_0 VLSI CLUB IIIT DHARWAD"
-            initialH3Text="Bridging Academia and Industry in Semiconductor Design."
-          />
-          <button
-            onClick={scrollToVideo}
-            className={`tour-button px-8 py-4 rounded-full text-white font-bold text-lg shadow-2xl hover:shadow-blue-500/50 transition-all duration-300 mt-10 ${
-              showWhiteBorder ? 'border-[3px] border-white' : ''
-            }`}
-          >
-            <Play className="inline-block w-5 h-5 mr-2" />
-            Take the Ultimate Tour
-          </button>
-          
-          <div 
-            ref={sectionRef}
-            className={`mt-65 relative w-full h-[500px] rounded-2xl ${
-              isVideoInView ? 'video-section-animate' : ''
-            }`}
-          >
-            <button
-              onClick={toggleAudio}
-              className="audio-control absolute top-4 right-4 z-50 p-3 rounded-full text-white shadow-lg"
-              title={isMuted ? "Unmute Audio" : "Mute Audio"}
+      <div className="relative flex flex-col items-center justify-center grow px-6 sm:px-8 lg:px-12 py-16">
+        {/* Grid Background Pattern */}
+        <div
+          className="absolute inset-0 [background-size:20px_20px] [background-image:linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-black [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+        
+        <main className="z-10 w-full max-w-7xl mx-auto mt-20">
+          {/* Hero Section - Text Left, Video Right */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
+            {/* Left - Text Content */}
+            <div className="flex flex-col text-left space-y-6">
+              <GlitchText
+                h1Text="GND_0 VLSI CLUB IIIT DHARWAD"
+                initialH3Text="Bridging Academia and Industry in Semiconductor Design."
+              />
+              
+              <button
+                onClick={scrollToVideo}
+                className="group relative inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-500 px-8 py-4 rounded-lg text-white font-semibold text-lg shadow-xl shadow-teal-900/30 hover:shadow-teal-800/50 transition-all duration-300 hover:-translate-y-0.5 w-fit"
+              >
+                <Play className="w-5 h-5 transition-transform group-hover:scale-110" />
+                <span>Take the Ultimate Tour</span>
+              </button>
+            </div>
+            
+            {/* Right - Video Section */}
+            <div 
+              ref={sectionRef}
+              className="relative w-full"
             >
-              {isMuted ? (
-                <VolumeX className="w-6 h-6" />
-              ) : (
-                <Volume2 className="w-6 h-6" />
-              )}
-            </button>
+              <button
+                onClick={toggleAudio}
+                className="absolute top-4 right-4 z-20 p-3 rounded-full bg-black/70 backdrop-blur-md border border-teal-700/50 text-white hover:bg-black/80 hover:border-teal-600/70 transition-all duration-300"
+                title={isMuted ? "Unmute Audio" : "Mute Audio"}
+              >
+                {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+              </button>
 
-            <div className={`absolute inset-0 w-full h-full ${isVideoInView ? 'video-animate' : ''}`}>
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-[6px]">
+              <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl shadow-black/40 border-2 border-teal-600/30">
                 <div className="video-inner-container">
                   {!videoError ? (
                     <iframe
@@ -397,89 +295,59 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
-            {particlesReady && (
-              <div className="absolute inset-0 z-35 pointer-events-none">
-                {[...Array(20)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute w-2 h-2 bg-blue-400/30 rounded-full animate-ping"
-                    style={{
-                      left: `${Math.random() * 100}%`,
-                      top: `${Math.random() * 100}%`,
-                      animationDelay: `${Math.random() * 3}s`,
-                      animationDuration: `${2 + Math.random() * 2}s`,
-                    }}
-                  />
-                ))}
-              </div>
-            )}
           </div>
 
-          <div className="w-full mt-15">
-            <h3 className="text-3xl md:text-4xl font-bold text-green mb-10 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-tight">
+          {/* VLSI Pulse Articles Section */}
+          <div className="w-full">
+            <h3 className="text-3xl md:text-4xl font-bold mb-10 text-teal-400 tracking-tight">
               Latest @ VLSI Pulse
             </h3>
-            <div className="embla overflow-hidden" ref={emblaRef}>
-              <div className="embla__container flex gap-8">
+            
+            <div className="embla overflow-hidden px-4" ref={emblaRef}>
+              <div className="embla__container flex gap-6">
                 {hotTopics.map((topic) => (
                   <div
                     key={topic._id}
-                    className="embla__slide flex-[0_0_340px] min-w-0 card"
+                    className="embla__slide flex-[0_0_320px] min-w-0"
                   >
-                    <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-md border border-blue-500/40 rounded-2xl overflow-hidden shadow-xl hover:shadow-blue-500/70 transition-all duration-500 hover:scale-105 p-6 flex flex-col h-full">
+                    <div className="bg-gray-900/90 backdrop-blur-md border border-gray-800 rounded-xl overflow-hidden shadow-xl hover:border-teal-600/50 hover:shadow-2xl hover:shadow-teal-900/20 transition-all duration-400 hover:-translate-y-2 h-full flex flex-col group">
                       {topic.thumbnail?.asset?.url && (
-                        <div className="relative overflow-hidden rounded-lg mb-4 group">
+                        <div className="relative overflow-hidden h-44">
                           <img
                             src={topic.thumbnail.asset.url}
                             alt={topic.title}
-                            className="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-110"
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute inset-0 bg-linear-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </div>
                       )}
-                      <div className="flex-1">
-                        <span className="inline-block px-3 py-1 mb-3 text-xs font-semibold text-white bg-blue-600/70 rounded-full">
+                      <div className="p-5 flex-1 flex flex-col">
+                        <span className="inline-block w-fit px-3 py-1 mb-3 text-xs font-semibold text-white bg-teal-600 rounded-md">
                           {topic.category}
                         </span>
-                        <div
-                          className="text-2xl md:text-3xl font-bold text-white hover:text-cyan-300 mb-4 line-clamp-2 glitch-title"
-                          style={{
-                            textShadow: "0 0 5px rgba(0, 255, 255, 0.3)",
-                          }}
-                        >
+                        <h4 className="text-lg font-bold text-white mb-3 line-clamp-2 group-hover:text-teal-300 transition-colors">
                           {topic.title}
-                        </div>
-                        <p className="text-sm text-gray-300 mb-4 line-clamp-3 leading-relaxed">
+                        </h4>
+                        <p className="text-sm text-gray-400 mb-4 line-clamp-3 flex-1">
                           {topic.summary}
                         </p>
-                      </div>
-                      <div className="flex justify-between items-center text-xs text-gray-300 border-t border-blue-500/20 pt-3">
-                        <span className="flex items-center">
-                          <svg
-                            className="w-4 h-4 mr-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          {calculateReadingTime(topic.summary)} mins read
-                        </span>
-                        <div className="flex space-x-4">
-                          <span className="flex items-center">
-                            <ThumbsUp className="w-4 h-4 mr-1" />
-                            {topic.upvotes || 0}
+                        <div className="flex justify-between items-center text-xs text-gray-500 pt-3 border-t border-gray-800">
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {calculateReadingTime(topic.summary)} min read
                           </span>
-                          <span className="flex items-center">
-                            <Eye className="w-4 h-4 mr-1" />
-                            {topic.views || 0}
-                          </span>
+                          <div className="flex gap-3">
+                            <span className="flex items-center gap-1">
+                              <ThumbsUp className="w-3.5 h-3.5" />
+                              {topic.upvotes || 0}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Eye className="w-3.5 h-3.5" />
+                              {topic.views || 0}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -487,43 +355,51 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <div className="flex justify-center mt-6 space-x-2">
+            
+            {/* Pagination Dots */}
+            <div className="flex justify-center mt-8 gap-2">
               {hotTopics.map((_, index) => (
                 <button
                   key={index}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  className={`h-2 rounded-full transition-all duration-300 ${
                     index === selectedIndex
-                      ? "bg-cyan-400 scale-125"
-                      : "bg-gray-600 hover:bg-cyan-600"
+                      ? "bg-teal-500 w-8"
+                      : "bg-gray-700 hover:bg-gray-600 w-2"
                   }`}
                   onClick={() => emblaApi?.scrollTo(index)}
                 />
               ))}
             </div>
-            <div className="mt-8 flex justify-center space-x-6">
+            
+            {/* Navigation Buttons */}
+            <div className="mt-8 flex justify-center gap-4">
               <button
                 onClick={() => emblaApi?.scrollPrev()}
-                className="px-6 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-md text-base font-bold hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-md hover:shadow-lg"
+                className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-lg text-sm font-medium transition-all duration-300 border border-gray-700 hover:border-teal-600/50"
               >
                 Prev
               </button>
               <Link
                 href="/vlsiPulse"
-                className="inline-flex items-center justify-center px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-md text-base font-bold hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-md hover:shadow-lg"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-lg shadow-teal-900/30"
               >
-                Read Articles <ExternalLink className="w-5 h-5 ml-2" />
+                Read Articles <ExternalLink className="w-4 h-4" />
               </Link>
               <button
                 onClick={() => emblaApi?.scrollNext()}
-                className="px-6 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-md text-base font-bold hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-md hover:shadow-lg"
+                className="px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white rounded-lg text-sm font-medium transition-all duration-300 border border-gray-700 hover:border-teal-600/50"
               >
                 Next
               </button>
             </div>
           </div>
         </main>
+        
+        {/* Footer inside grid background */}
+        <div className="z-10 w-full mt-20">
+          <Footer />
+        </div>
       </div>
-      <Footer />
     </div>
   );
 }
