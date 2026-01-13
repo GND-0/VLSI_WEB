@@ -46,10 +46,10 @@ interface Alumni {
 // Skeleton Loader Component
 function SkeletonCard() {
   return (
-    <div className="flex flex-col items-center text-center animate-pulse">
-      <div className="h-40 w-40 sm:h-48 sm:w-48 rounded-full bg-gray-800 mb-4"></div>
-      <div className="h-5 sm:h-6 w-3/4 bg-gray-800 rounded mb-2"></div>
-      <div className="h-3 sm:h-4 w-1/2 bg-gray-800 rounded"></div>
+    <div className="flex flex-col items-center text-center animate-pulse p-6 bg-gray-900/40 rounded-xl border border-gray-800/30">
+      <div className="h-32 w-32 sm:h-40 sm:w-40 rounded-full bg-gray-800/60 mb-4"></div>
+      <div className="h-5 w-28 bg-gray-800/60 rounded mb-2"></div>
+      <div className="h-4 w-20 bg-gray-800/60 rounded"></div>
     </div>
   );
 }
@@ -141,21 +141,20 @@ export default function About() {
   return (
     <div className={`flex flex-col min-h-screen bg-black ${inter.className}`}>
       <Header />
-      <div
-        className="relative flex flex-col flex-grow p-4 sm:p-8 mt-15"
-        style={{
-          backgroundImage: "url('/image.png')",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-        }}
-      >
+      <div className="relative flex flex-col grow p-4 sm:p-8 mt-16">
+        {/* Grid Background Pattern */}
+        <div
+          className="absolute inset-0 [background-size:20px_20px] [background-image:linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-black [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+        
         <main className="z-10 max-w-7xl mx-auto w-full">
           {/* Members Section */}
-          <section className="py-8 sm:py-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6 sm:mb-8">Our Team</h2>
-            <p className="text-gray-400 text-center mb-8 sm:mb-12 text-sm sm:text-base max-w-3xl mx-auto">
+          <section className="py-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-teal-400 tracking-tight">
+              Our Team
+            </h2>
+            <p className="text-gray-400 text-center mb-10 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
               Meet the dedicated individuals driving our club&#39;s mission to advance VLSI design and innovation.
             </p>
 
@@ -165,9 +164,9 @@ export default function About() {
               <>
                 {/* Club Leadership (President, Secretary, and Treasurer) */}
                 {loading ? (
-                  <div className="mb-8 sm:mb-12">
-                    <h3 className="text-xl sm:text-2xl font-semibold text-white text-center mb-4 sm:mb-6">Club Leadership</h3>
-                    <div className={`${getGridClasses(3)} gap-4 sm:gap-6`}>
+                  <div className="mb-10">
+                    <h3 className="text-xl sm:text-2xl font-semibold text-white text-center mb-6">Club Leadership</h3>
+                    <div className={`${getGridClasses(3)} gap-6`}>
                       {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
                     </div>
                   </div>
@@ -178,9 +177,9 @@ export default function About() {
                       <MobileLeadershipSection members={leadership} />
                     </div>
                     {/* Desktop Leadership Section (sm breakpoint and above) */}
-                    <div className="hidden sm:block mb-8 sm:mb-12">
-                      <h3 className="text-xl sm:text-2xl font-semibold text-white text-center mb-4 sm:mb-6">Club Leadership</h3>
-                      <div className={`${getGridClasses(leadership.length)} gap-4 sm:gap-6`}>
+                    <div className="hidden sm:block mb-10">
+                      <h3 className="text-xl sm:text-2xl font-semibold text-white text-center mb-6">Club Leadership</h3>
+                      <div className={`${getGridClasses(leadership.length)} gap-6`}>
                         {leadership.map((member) => (
                           <MemberCard
                             key={member._id}
@@ -188,28 +187,28 @@ export default function About() {
                             position={member.position}
                             imageSrc={member.image?.asset?.url ? `${member.image.asset.url}?w=384&h=384` : "/placeholder.png"}
                             linkedin={member.linkedin}
-                            className={member.position !== "President" ? "mt-25" : ""}
+                            className={member.position !== "President" ? "mt-8" : ""}
                           />
                         ))}
                       </div>
                     </div>
                   </>
                 ) : (
-                  <p className="text-gray-400 text-center text-sm sm:text-base">No leadership members available.</p>
+                  <p className="text-gray-400 text-center">No leadership members available.</p>
                 )}
 
                 {/* Club Members */}
                 {loading ? (
                   <div>
-                    <h3 className="text-xl sm:text-2xl font-semibold text-white text-center mb-4 sm:mb-6">Club Members</h3>
-                    <div className={`${getGridClasses(3)} gap-4 sm:gap-6`}>
+                    <h3 className="text-xl sm:text-2xl font-semibold text-white text-center mb-6">Club Members</h3>
+                    <div className={`${getGridClasses(3)} gap-6`}>
                       {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
                     </div>
                   </div>
                 ) : clubMembers.length > 0 ? (
                   <div>
-                    <h3 className="text-xl sm:text-2xl font-semibold text-white text-center mb-4 sm:mb-6">Club Members</h3>
-                    <div className={`${getGridClasses(clubMembers.length)} gap-4 sm:gap-6`}>
+                    <h3 className="text-xl sm:text-2xl font-semibold text-white text-center mb-6">Club Members</h3>
+                    <div className={`${getGridClasses(clubMembers.length)} gap-6`}>
                       {clubMembers.map((member) => (
                         <MemberCard
                           key={member._id}
@@ -222,26 +221,28 @@ export default function About() {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-400 text-center text-sm sm:text-base">No club members available.</p>
+                  <p className="text-gray-400 text-center">No club members available.</p>
                 )}
               </>
             )}
           </section>
 
           {/* Alumni */}
-          <section className="py-8 sm:py-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6 sm:mb-8">Alumni</h2>
-            <p className="text-gray-400 text-center mb-8 sm:mb-12 text-sm sm:text-base max-w-3xl mx-auto">
+          <section className="py-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 bg-linear-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+              Alumni
+            </h2>
+            <p className="text-gray-400 text-center mb-10 text-sm sm:text-base max-w-2xl mx-auto">
               Our alumni have gone on to make significant contributions in the field of VLSI and beyond.
             </p>
             {error ? (
-              <p className="text-red-400 text-center text-sm sm:text-base">{error}</p>
+              <p className="text-red-400 text-center">{error}</p>
             ) : loading ? (
-              <div className={`${getGridClasses(3)} gap-4 sm:gap-6`}>
+              <div className={`${getGridClasses(3)} gap-6`}>
                 {[...Array(3)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : sortedAlumni.length > 0 ? (
-              <div className={`${getGridClasses(sortedAlumni.length)} gap-4 sm:gap-6`}>
+              <div className={`${getGridClasses(sortedAlumni.length)} gap-6`}>
                 {sortedAlumni.map((alumnus) => (
                   <AlumniCard
                     key={alumnus._id}
@@ -254,15 +255,17 @@ export default function About() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-400 text-center text-sm sm:text-base">No alumni available.</p>
+              <p className="text-gray-400 text-center">No alumni available.</p>
             )}
           </section>
 
           {/* Faculty Mentor */}
-          <section className="py-8 sm:py-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6 sm:mb-8">Faculty Mentor</h2>
+          <section className="py-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 bg-linear-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+              Faculty Mentor
+            </h2>
             {error ? (
-              <p className="text-red-400 text-center text-sm sm:text-base">{error}</p>
+              <p className="text-red-400 text-center">{error}</p>
             ) : loading ? (
               <div className="flex justify-center">
                 <SkeletonCard />
@@ -280,21 +283,23 @@ export default function About() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-400 text-center text-sm sm:text-base">No faculty mentor available.</p>
+              <p className="text-gray-400 text-center">No faculty mentor available.</p>
             )}
           </section>
 
           {/* Faculty Guides */}
-          <section className="py-8 sm:py-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6 sm:mb-8">Faculty Guides</h2>
+          <section className="py-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 bg-linear-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
+              Faculty Guides
+            </h2>
             {error ? (
-              <p className="text-red-400 text-center text-sm sm:text-base">{error}</p>
+              <p className="text-red-400 text-center">{error}</p>
             ) : loading ? (
-              <div className={`${getGridClasses(2)} gap-4 sm:gap-6`}>
+              <div className={`${getGridClasses(2)} gap-6`}>
                 {[...Array(2)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : facultyGuides.length > 0 ? (
-              <div className={`${getGridClasses(facultyGuides.length)} gap-4 sm:gap-6`}>
+              <div className={`${getGridClasses(facultyGuides.length)} gap-6`}>
                 {facultyGuides.map((faculty) => (
                   <FacultyCard
                     key={faculty._id}
@@ -306,18 +311,17 @@ export default function About() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-400 text-center text-sm sm:text-base">No faculty guides available.</p>
+              <p className="text-gray-400 text-center">No faculty guides available.</p>
             )}
           </section>
 
           {/* View Club Projects Button */}
-          <div className="py-8 sm:py-12 flex justify-center">
+          <div className="py-12 flex justify-center">
             <Link
               href="/club-projects"
-              className="relative text-white text-base sm:text-lg font-bold tracking-tight matrix-text-header transition-all duration-300 px-4 sm:px-6 py-2 sm:py-3 bg-blue-500 hover:bg-blue-600 rounded-full matrix-container-header"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-500 transition-all duration-300"
             >
-              <span>View Club Projects</span>
-              <div className="matrix-rain-header"></div>
+              View Club Projects
             </Link>
           </div>
         </main>

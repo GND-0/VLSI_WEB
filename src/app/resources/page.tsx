@@ -15,10 +15,10 @@ const inter = Inter({
 // Skeleton Loader Component
 function SkeletonCard() {
   return (
-    <div className="bg-black/50 backdrop-blur-sm p-4 rounded-lg animate-pulse">
-      <div className="h-40 w-full bg-gray-800 rounded-lg mb-3"></div>
-      <div className="h-5 bg-gray-800 rounded w-3/4 mb-2"></div>
-      <div className="h-3 bg-gray-800 rounded w-full"></div>
+    <div className="bg-slate-900/85 backdrop-blur-xl p-5 rounded-xl border border-gray-700/30 animate-pulse">
+      <div className="h-36 w-full bg-gray-800/50 rounded-lg mb-3"></div>
+      <div className="h-5 bg-gray-800/50 rounded w-3/4 mb-2"></div>
+      <div className="h-3 bg-gray-800/50 rounded w-full"></div>
     </div>
   );
 }
@@ -27,23 +27,23 @@ function SkeletonCard() {
 function HardwareCard({ item, onClick }: { item: Hardware; onClick: () => void }) {
   return (
     <div
-      className="relative flex flex-col items-center text-center cursor-pointer bg-black/60 backdrop-blur-md p-4 rounded-xl shadow-md hover:bg-black/80 hover:shadow-lg transition-all duration-300 active:bg-black/80"
+      className="group flex flex-col items-center text-center cursor-pointer bg-slate-900/85 backdrop-blur-xl p-5 rounded-xl border border-gray-700/30 hover:border-teal-500/40 hover:shadow-xl hover:shadow-teal-500/10 transition-all duration-500 hover:-translate-y-1.5"
       onClick={onClick}
     >
-      <div className="relative w-full aspect-square max-w-[150px] sm:max-w-[192px]">
+      <div className="relative w-full aspect-square max-w-37.5 sm:max-w-45">
         <Image
           src={item.image?.asset?.url || '/placeholder.png'}
           alt={item.name}
           fill
-          className="object-cover rounded-lg"
-          sizes="(max-width: 640px) 150px, 192px"
+          className="object-cover rounded-lg transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 640px) 150px, 180px"
         />
-        <span className="absolute top-1 right-1 bg-black/90 text-white px-2 py-1 rounded-full text-xs font-bold">
-          x {item.count ?? 0}
+        <span className="absolute top-2 right-2 bg-slate-900/90 backdrop-blur-md text-white px-2 py-1 rounded-full text-xs font-medium border border-gray-700/50">
+          x{item.count ?? 0}
         </span>
       </div>
-      <h3 className="mt-3 text-lg sm:text-xl font-semibold text-white">{item.name}</h3>
-      <p className="text-gray-400 text-xs sm:text-sm mt-2 line-clamp-2">{item.shortDescription}</p>
+      <h3 className="mt-4 text-lg font-semibold text-white group-hover:text-teal-400 transition-colors">{item.name}</h3>
+      <p className="text-gray-400 text-sm mt-2 line-clamp-2">{item.shortDescription}</p>
     </div>
   );
 }
@@ -53,30 +53,30 @@ function Drawer({ isOpen, onClose, item }: { isOpen: boolean; onClose: () => voi
   if (!isOpen || !item) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-40 flex justify-end transition-opacity duration-300">
-      <div className="h-full w-full sm:max-w-md bg-black/90 backdrop-blur-lg p-6 sm:p-8 overflow-y-auto shadow-2xl animate-slide-in">
+    <div className="fixed inset-0 bg-black/80 z-40 flex justify-end">
+      <div className="h-full w-full sm:max-w-md bg-gray-900 p-6 sm:p-8 overflow-y-auto border-l border-gray-800">
         <button
-          className="absolute top-4 right-4 text-white hover:text-gray-300 text-lg sm:text-xl p-2"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white text-xl p-2 transition-colors"
           onClick={onClose}
         >
           ✕
         </button>
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">{item.name}</h2>
-        <p className="text-gray-300 text-sm sm:text-base mb-6">{item.fullDescription}</p>
-        <h3 className="text-lg sm:text-xl font-semibold text-white mb-4">Learn More</h3>
-        <ul className="space-y-3">
+        <h2 className="text-2xl font-bold text-white mb-4">{item.name}</h2>
+        <p className="text-gray-400 text-sm mb-6">{item.fullDescription}</p>
+        <h3 className="text-lg font-semibold text-white mb-3">Learn More</h3>
+        <ul className="space-y-2">
           {item.links?.map((link, index) => (
             <li key={index}>
               <a
                 href={link.url}
-                className="text-blue-400 hover:text-blue-200 flex items-center gap-2 text-sm sm:text-base"
+                className="text-teal-400 hover:text-teal-300 text-sm transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {link.title}
               </a>
             </li>
-          )) ?? <p className="text-gray-400 text-sm sm:text-base">No links available.</p>}
+          )) ?? <p className="text-gray-500 text-sm">No links available.</p>}
         </ul>
       </div>
     </div>
@@ -132,50 +132,50 @@ export default function Resources() {
   return (
     <div className={`flex flex-col min-h-screen bg-black text-white ${inter.className}`}>
       <Header />
-      <div
-        className="relative flex flex-col flex-grow p-4 sm:p-8"
-        style={{
-          backgroundImage: "url('/image.png')",
-          backgroundSize: 'auto',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: 'top left',
-        }}
-      >
-        <main className="z-10 max-w-7xl mx-auto w-full mt-20">
+      <div className="relative flex flex-col grow p-4 sm:p-8 mt-16">
+        {/* Grid Background Pattern */}
+        <div
+          className="absolute inset-0 [background-size:20px_20px] [background-image:linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-black [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+        
+        <main className="z-10 max-w-7xl mx-auto w-full">
           {/* Resources Section */}
-          <section className="py-8 sm:py-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8">VLSI Resources</h2>
-            <p className="text-gray-400 text-center mb-8 sm:mb-12 text-sm sm:text-base max-w-3xl mx-auto">
+          <section className="py-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 text-teal-400">
+              VLSI Resources
+            </h2>
+            <p className="text-gray-400 text-center mb-10 text-sm sm:text-base max-w-2xl mx-auto">
               Explore curated resources on VLSI design, categorized for easy navigation. From foundational books to advanced tutorials, these materials are selected to bridge theoretical knowledge with practical application in semiconductor design.
             </p>
             {error ? (
-              <p className="text-red-400 text-center text-sm sm:text-base">{error}</p>
+              <p className="text-red-400 text-center">{error}</p>
             ) : loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : resources.length > 0 ? (
               Array.from(new Set(resources.map((r) => r.category))).map((category) => (
-                <div key={category} className="mb-8 sm:mb-12">
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">{category}</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div key={category} className="mb-10">
+                  <h3 className="text-xl font-semibold mb-4 text-gray-200">{category}</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {resources
                       .filter((item) => item.category === category)
                       .map((item, index) => (
                         <div
                           key={index}
-                          className="bg-black/60 backdrop-blur-md p-4 sm:p-6 rounded-xl shadow-md hover:bg-black/80 hover:shadow-lg transition-all duration-300"
+                          className="bg-gray-900/60 backdrop-blur-sm p-5 rounded-xl border border-gray-800/50 hover:border-gray-700 transition-all duration-300"
                         >
-                          <h4 className="text-base sm:text-lg font-bold mb-2">{item.title}</h4>
-                          <p className="text-gray-500 text-xs sm:text-sm mb-2">{item.type}</p>
-                          <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-3">{item.description}</p>
+                          <h4 className="text-lg font-semibold text-white mb-2">{item.title}</h4>
+                          <p className="text-gray-500 text-xs uppercase tracking-wide mb-2">{item.type}</p>
+                          <p className="text-gray-400 text-sm mb-4 line-clamp-3">{item.description}</p>
                           <a
                             href={item.file?.asset?.url || '#'}
-                            className="text-blue-400 hover:text-blue-200 text-xs sm:text-sm"
+                            className="inline-flex items-center text-teal-400 hover:text-teal-300 text-sm transition-colors"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            Download/View
+                            Download/View →
                           </a>
                         </div>
                       ))}
@@ -183,30 +183,32 @@ export default function Resources() {
                 </div>
               ))
             ) : (
-              <p className="text-center text-sm sm:text-base">No resources available.</p>
+              <p className="text-center text-gray-400">No resources available.</p>
             )}
           </section>
 
           {/* Hardware Section */}
-          <section className="py-8 sm:py-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8">Hardware Component Availability</h2>
-            <p className="text-gray-400 text-center mb-8 sm:mb-12 text-sm sm:text-base">
-              This information involves the list and the number of hardware components available with the club as of 11:05 PM IST on Thursday, August 21, 2025.
+          <section className="py-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 bg-linear-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+              Hardware Component Availability
+            </h2>
+            <p className="text-gray-400 text-center mb-10 text-sm sm:text-base">
+              This information involves the list and the number of hardware components available with the club.
             </p>
             {error ? (
-              <p className="text-red-400 text-center text-sm sm:text-base">{error}</p>
+              <p className="text-red-400 text-center">{error}</p>
             ) : loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
               </div>
             ) : hardware.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {hardware.map((item, index) => (
                   <HardwareCard key={index} item={item} onClick={() => setSelectedHardware(item)} />
                 ))}
               </div>
             ) : (
-              <p className="text-center text-sm sm:text-base">No hardware components available.</p>
+              <p className="text-center text-gray-400">No hardware components available.</p>
             )}
           </section>
         </main>

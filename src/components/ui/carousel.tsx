@@ -4,10 +4,9 @@ import * as React from "react"
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
@@ -28,6 +27,9 @@ type CarouselContextProps = {
   scrollNext: () => void
   canScrollPrev: boolean
   canScrollNext: boolean
+  selectedIndex: number
+  scrollSnaps: number[]
+  scrollTo: (index: number) => void
 } & CarouselProps
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
@@ -60,11 +62,14 @@ function Carousel({
   )
   const [canScrollPrev, setCanScrollPrev] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+  const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([])
 
   const onSelect = React.useCallback((api: CarouselApi) => {
     if (!api) return
     setCanScrollPrev(api.canScrollPrev())
     setCanScrollNext(api.canScrollNext())
+    setSelectedIndex(api.selectedScrollSnap())
   }, [])
 
   const scrollPrev = React.useCallback(() => {
@@ -73,6 +78,10 @@ function Carousel({
 
   const scrollNext = React.useCallback(() => {
     api?.scrollNext()
+  }, [api])
+
+  const scrollTo = React.useCallback((index: number) => {
+    api?.scrollTo(index)
   }, [api])
 
   const handleKeyDown = React.useCallback(
@@ -96,8 +105,10 @@ function Carousel({
   React.useEffect(() => {
     if (!api) return
     onSelect(api)
+    setScrollSnaps(api.scrollSnapList())
     api.on("reInit", onSelect)
     api.on("select", onSelect)
+    api.on("reInit", () => setScrollSnaps(api.scrollSnapList()))
 
     return () => {
       api?.off("select", onSelect)
@@ -116,11 +127,14 @@ function Carousel({
         scrollNext,
         canScrollPrev,
         canScrollNext,
+        selectedIndex,
+        scrollSnaps,
+        scrollTo,
       }}
     >
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
+        className={cn("relative group", className)}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
@@ -138,13 +152,13 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       ref={carouselRef}
-      className="overflow-hidden"
+      className="overflow-hidden rounded-xl"
       data-slot="carousel-content"
     >
       <div
         className={cn(
-          "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          "flex transition-transform duration-300",
+          orientation === "horizontal" ? "-ml-3" : "-mt-3 flex-col",
           className
         )}
         {...props}
@@ -163,7 +177,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="carousel-item"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
+        orientation === "horizontal" ? "pl-3" : "pt-3",
         className
       )}
       {...props}
@@ -173,61 +187,133 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
 
 function CarouselPrevious({
   className,
-  variant = "outline",
-  size = "icon",
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<"button">) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
   return (
-    <Button
+    <button
       data-slot="carousel-previous"
-      variant={variant}
-      size={size}
       className={cn(
-        "absolute size-8 rounded-full",
+        "absolute z-10 flex items-center justify-center",
+        "size-12 rounded-full",
+        "bg-linear-to-br from-gray-900/95 to-gray-800/95",
+        "border border-gray-600/50",
+        "text-white shadow-2xl shadow-black/50",
+        "backdrop-blur-xl",
+        "transition-all duration-300 ease-out",
+        "hover:from-teal-600 hover:to-teal-700 hover:border-teal-400/50 hover:scale-110 hover:shadow-teal-500/30",
+        "focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:ring-offset-2 focus:ring-offset-black",
+        "disabled:opacity-0 disabled:pointer-events-none disabled:scale-90",
+        "opacity-0 group-hover:opacity-100",
         orientation === "horizontal"
-          ? "top-1/2 -left-12 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+          ? "top-1/2 left-3 -translate-y-1/2"
+          : "-top-14 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
+      aria-label="Previous slide"
       {...props}
     >
-      <ArrowLeft />
-      <span className="sr-only">Previous slide</span>
-    </Button>
+      <ChevronLeft className="size-6" strokeWidth={2.5} />
+    </button>
   )
 }
 
 function CarouselNext({
   className,
-  variant = "outline",
-  size = "icon",
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<"button">) {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
 
   return (
-    <Button
+    <button
       data-slot="carousel-next"
-      variant={variant}
-      size={size}
       className={cn(
-        "absolute size-8 rounded-full",
+        "absolute z-10 flex items-center justify-center",
+        "size-12 rounded-full",
+        "bg-linear-to-br from-gray-900/95 to-gray-800/95",
+        "border border-gray-600/50",
+        "text-white shadow-2xl shadow-black/50",
+        "backdrop-blur-xl",
+        "transition-all duration-300 ease-out",
+        "hover:from-teal-600 hover:to-teal-700 hover:border-teal-400/50 hover:scale-110 hover:shadow-teal-500/30",
+        "focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:ring-offset-2 focus:ring-offset-black",
+        "disabled:opacity-0 disabled:pointer-events-none disabled:scale-90",
+        "opacity-0 group-hover:opacity-100",
         orientation === "horizontal"
-          ? "top-1/2 -right-12 -translate-y-1/2"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+          ? "top-1/2 right-3 -translate-y-1/2"
+          : "-bottom-14 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
       disabled={!canScrollNext}
       onClick={scrollNext}
+      aria-label="Next slide"
       {...props}
     >
-      <ArrowRight />
-      <span className="sr-only">Next slide</span>
-    </Button>
+      <ChevronRight className="size-6" strokeWidth={2.5} />
+    </button>
+  )
+}
+
+function CarouselDots({ className, ...props }: React.ComponentProps<"div">) {
+  const { scrollSnaps, selectedIndex, scrollTo } = useCarousel()
+
+  if (scrollSnaps.length <= 1) return null
+
+  return (
+    <div
+      data-slot="carousel-dots"
+      className={cn(
+        "absolute bottom-4 left-1/2 -translate-x-1/2 z-10",
+        "flex items-center gap-2",
+        "bg-black/60 backdrop-blur-md rounded-full px-3 py-2",
+        "border border-white/10",
+        className
+      )}
+      {...props}
+    >
+      {scrollSnaps.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => scrollTo(index)}
+          aria-label={`Go to slide ${index + 1}`}
+          className={cn(
+            "transition-all duration-300 ease-out rounded-full",
+            "focus:outline-none focus:ring-2 focus:ring-teal-400/50",
+            index === selectedIndex
+              ? "w-6 h-2 bg-linear-to-r from-teal-400 to-cyan-400"
+              : "w-2 h-2 bg-white/40 hover:bg-white/70"
+          )}
+        />
+      ))}
+    </div>
+  )
+}
+
+function CarouselCounter({ className, ...props }: React.ComponentProps<"div">) {
+  const { scrollSnaps, selectedIndex } = useCarousel()
+
+  if (scrollSnaps.length <= 1) return null
+
+  return (
+    <div
+      data-slot="carousel-counter"
+      className={cn(
+        "absolute top-4 right-4 z-10",
+        "flex items-center gap-1.5",
+        "bg-black/70 backdrop-blur-md rounded-lg px-3 py-1.5",
+        "border border-white/10",
+        "text-sm font-medium text-white",
+        className
+      )}
+      {...props}
+    >
+      <span className="text-teal-400">{selectedIndex + 1}</span>
+      <span className="text-gray-500">/</span>
+      <span className="text-gray-400">{scrollSnaps.length}</span>
+    </div>
   )
 }
 
@@ -238,4 +324,6 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselDots,
+  CarouselCounter,
 }
